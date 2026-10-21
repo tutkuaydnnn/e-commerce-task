@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tuen Creations – Product Detail</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<div class="frame">
+
+  <!-- Same header for consistency between views -->
+  <header class="header">
+    <div class="brand-row">
+      <a class="brand" href="index.html">
+        <span class="brand-badge"><img src="logo.png" alt="Tuen Creations – back to homepage"></span>
+        <span class="brand-text">
+          <span class="brand-name">Tuen Creations</span>
+          <span class="subtitle">Handcrafted Home &amp; Living Studio</span>
+        </span>
+      </a>
+      <div class="header-right">
+        <button type="button" class="notes-pill" id="notes-pill" aria-haspopup="true" aria-expanded="false">ⓘ Instructor Notes &amp; Taxonomy</button>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html#cat=all">All Products</a>
+      <a href="index.html#cat=drinkware">Drinkware &amp; Tableware</a>
+      <a href="index.html#cat=candles">Candles &amp; Home Fragrance</a>
+      <a href="index.html#cat=decor">Incense &amp; Decor Accents</a>
+    </nav>
+  </header>
+
+  <!-- SEARCH BAR (available on every page) -->
+  <div class="searchwrap">
+    <div class="searchbar">
+      🔍
+      <label class="sr-only" for="search">Search products</label>
+      <input type="search" id="search" placeholder="Search by product name, material or scent…" autocomplete="off">
+    </div>
+    <div class="search-results" id="search-results" hidden></div>
+  </div>
+
+  <!-- BREADCRUMB: consistent navigation back to listing -->
+  <p class="breadcrumb">
+    <a href="index.html">← All Products</a> /
+    <span id="bc-cat">Drinkware &amp; Tableware</span> /
+    <strong id="bc-name">Loading…</strong>
+  </p>
+
+  <div class="detail-grid" id="main-content">
+
+    <!-- IMAGE + GALLERY -->
+    <div>
+      <div class="detail-img" id="p-photo">[ Main Product Image ]</div>
+      <div class="thumbs" id="p-thumbs"></div>
+    </div>
+
+    <!-- ALL KEY ATTRIBUTES + DESCRIPTION -->
+    <div class="detail-info">
+      <h2 id="p-name">Loading…</h2>
+      <p class="cat" id="p-cat"></p>
+      <p class="price detail-price" id="p-price-big"></p>
+
+      <table class="spec-table">
+        <tr><th>Category Type</th><td id="p-cattr"></td></tr>
+        <tr><th>Primary Material</th><td id="p-mat"></td></tr>
+        <tr><th>Capacity / Volume</th><td id="p-cap"></td></tr>
+        <tr><th>Customization Option</th><td id="p-cust"></td></tr>
+        <tr><th>Dimensions</th><td id="p-dims"></td></tr>
+        <tr><th>Care</th><td id="p-care"></td></tr>
+        <tr><th>Availability</th><td id="p-avail"></td></tr>
+      </table>
+
+      <h4>Description</h4>
+      <p class="desc" id="p-desc"></p>
+
+      <!-- Custom inscription (only for customizable products) -->
+      <div class="custom-box" id="custom-box" hidden>
+        <label for="custom-text"><h4>Custom Inscription</h4></label>
+        <input type="text" id="custom-text" maxlength="40"
+               placeholder="Enter custom text / name for your product…">
+        <p class="facet-note">Hand-stamped under the glaze before firing · non-returnable after firing</p>
+      </div>
+
+      <!-- PRICE + ACTIONS -->
+      <div class="buybox">
+        <div class="buy-actions">
+          <button type="button" class="btn btn-primary" id="btn-add">🛒 Add to Cart</button>
+          <button type="button" class="btn btn-secondary" id="btn-order">⚡ Order Now</button>
+          <button type="button" class="fav-btn" id="btn-fav" aria-pressed="false"
+                  aria-label="Add to favorites">♡ Save</button>
+        </div>
+      </div>
+
+      <!-- CONTACT DETAILS -->
+      <p class="contact-line">
+        📩 hello@tuencreations.com &nbsp;·&nbsp; 📍 Studio: Kraków, PL (local pickup available) &nbsp;·&nbsp;
+        <a href="index.html">← back to catalog</a>
+      </p>
+    </div>
+  </div>
+
+  <footer class="pagenote">
+    <span>© 2026 Tuen Creations · Handcrafted Studio</span>
+    <span>
+      <a href="index.html">Shop</a> &nbsp;·&nbsp;
+      <a href="index.html#cat=candles">New In</a> &nbsp;·&nbsp;
+      <a href="#">Shipping &amp; Returns</a> &nbsp;·&nbsp;
+      <a href="#">Contact</a>
+    </span>
+  </footer>
+
+</div>
+
+<script src="products.js"></script>
+<script src="store.js"></script>
+<script>
+(function () {
+  const id = new URLSearchParams(location.search).get('id');
+  const p = PRODUCTS.find(x => x.id === id) || PRODUCTS.find(x => x.id === 'gingerbread');
+
+  document.title = 'Tuen Creations – ' + p.name;
+  document.getElementById('bc-name').textContent = p.name;
+  document.getElementById('bc-cat').textContent = CAT_LABELS[p.cat];
+  document.getElementById('p-name').textContent = p.name;
+  document.getElementById('p-cat').textContent = CAT_SUB[p.cat];
+  document.getElementById('p-cattr').textContent = CAT_LABELS[p.cat];
+  document.getElementById('p-mat').textContent = p.material;
+  document.getElementById('p-cap').textContent = p.capNote || 'Not applicable (solid decor item)';
+  document.getElementById('p-cust').textContent = p.customizable
+    ? 'Yes – custom text / personalization available'
+    : 'No – standard ready-to-ship design';
+  document.getElementById('p-dims').textContent = p.dims;
+  document.getElementById('p-care').textContent = p.care;
+  document.getElementById('p-avail').textContent = p.availability;
+  document.getElementById('p-desc').textContent = p.desc;
+  // Photos: main image + optional second image (click thumbnail to swap)
+  const photos = [p.image, p.image2, p.image3].filter(Boolean);
+
+  // Big price under the title
+  document.getElementById('p-price-big').textContent = p.price + ' PLN';
+
+  // Custom inscription box only when product is customizable
+  const customBox = document.getElementById('custom-box');
+  if (p.customizable) { customBox.hidden = false; }
+
+  const favBtn = document.getElementById('btn-fav');
+  function paintFav() {
+    const on = Store.isFav(p.id);
+    favBtn.classList.toggle('is-fav', on);
+    favBtn.setAttribute('aria-pressed', on);
+    favBtn.textContent = on ? '♥ Saved' : '♡ Save';
+  }
+  paintFav();
+  favBtn.addEventListener('click', () => { Store.toggleFav(p.id); paintFav(); StoreUI.refreshBadges(); });
+
+  function addFeedback(btn) {
+    btn.textContent = '🛒 Added ✓';
+    setTimeout(() => { btn.textContent = '🛒 Add to Cart'; }, 1200);
+  }
+  const addBtn = document.getElementById('btn-add');
+  const orderBtn = document.getElementById('btn-order');
+  function handleAdd(btn) {
+    const text = p.customizable ? document.getElementById('custom-text').value.trim() : '';
+    if (p.customizable && !text) {
+      customBox.querySelector('input').classList.add('needs-fill');
+      customBox.querySelector('input').focus();
+      setTimeout(() => customBox.querySelector('input').classList.remove('needs-fill'), 1600);
+      return;
+    }
+    Store.addCart(p.id, text);
+    StoreUI.refreshBadges();
+    addFeedback(btn);
+  }
+  addBtn.addEventListener('click', () => handleAdd(addBtn));
+  orderBtn.addEventListener('click', () => handleAdd(orderBtn));
+  const photo = document.getElementById('p-photo');
+  const thumbs = document.getElementById('p-thumbs');
+  let current = 0;
+
+  function showPhoto(i) {
+    current = i;
+    photo.innerHTML = photos[i]
+      ? `<img src="${photos[i]}" alt="${p.name} – photo ${i + 1} of ${photos.length}">`
+      : '[ Main Product Image ]';
+    [...thumbs.children].forEach((b, idx) =>
+      b.classList.toggle('is-active', idx === i));
+  }
+
+  // Products with real photos show only their actual thumbnails;
+  // products without photos keep the 4 wireframe placeholders.
+  const pad = photos.length ? 0 : 4;
+  thumbs.innerHTML =
+    photos.map((src, i) => `
+      <button type="button" class="thumb real" data-i="${i}" aria-label="Show photo ${i + 1}">
+        <img src="${src}" alt="">
+      </button>`).join('') +
+    Array(pad).fill(`<span class="thumb">[ Thumb ]</span>`).join('');
+
+  showPhoto(0);
+  thumbs.querySelectorAll('button.thumb').forEach(b =>
+    b.addEventListener('click', () => showPhoto(+b.dataset.i)));
+
+  // ---------- Product search on the detail page ----------
+  const searchInput = document.getElementById('search');
+  const results = document.getElementById('search-results');
+
+  function searchProducts(q) {
+    const t = q.trim().toLowerCase();
+    return t ? PRODUCTS.filter(p => (p.name + ' ' + p.material).toLowerCase().includes(t)) : [];
+  }
+
+  function renderResults() {
+    const q = searchInput.value;
+    const found = searchProducts(q);
+    if (!q.trim()) { results.hidden = true; return; }
+    if (!found.length) {
+      results.innerHTML = '<p class="sr-empty">No products found for \u201c' + q + '\u201d.</p>';
+    } else {
+      results.innerHTML = found.map(x => `
+        <a href="detail.html?id=${x.id}">
+          <strong>${x.name}</strong><span>${x.price} PLN</span>
+        </a>`).join('') +
+        `<a class="see-all" href="index.html#q=${encodeURIComponent(q)}">See all results in catalog →</a>`;
+    }
+    results.hidden = false;
+  }
+
+  searchInput.addEventListener('input', renderResults);
+  searchInput.addEventListener('focus', renderResults);
+  searchInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const v = searchInput.value.trim();
+      if (v) location.href = 'index.html#q=' + encodeURIComponent(v);
+    }
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.searchwrap')) results.hidden = true;
+  });
+})();
+</script>
+
+</body>
+</html>

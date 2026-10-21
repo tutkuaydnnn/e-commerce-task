@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tuen Creations – Catalog Listing</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<div class="frame">
+
+  <!-- HEADER: logo + catalog name + category navigation -->
+  <header class="header">
+    <div class="brand-row">
+      <a class="brand" href="index.html">
+        <span class="brand-badge"><img src="logo.png" alt="Tuen Creations – back to homepage"></span>
+        <span class="brand-text">
+          <span class="brand-name">Tuen Creations</span>
+          <span class="subtitle">Handcrafted Home &amp; Living Studio</span>
+        </span>
+      </a>
+      <div class="header-right">
+        <button type="button" class="notes-pill" id="notes-pill" aria-haspopup="true" aria-expanded="false">ⓘ Instructor Notes &amp; Taxonomy</button>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html#cat=all" data-cat="all" class="active">All Products</a>
+      <a href="index.html#cat=drinkware" data-cat="drinkware">Drinkware &amp; Tableware</a>
+      <a href="index.html#cat=candles" data-cat="candles">Candles &amp; Home Fragrance</a>
+      <a href="index.html#cat=decor" data-cat="decor">Incense &amp; Decor Accents</a>
+    </nav>
+  </header>
+
+  <!-- SEARCH BAR (filters live, case-insensitive) -->
+  <div class="searchbar">
+    🔍
+    <label class="sr-only" for="search">Search products</label>
+    <input type="search" id="search" placeholder="Search by product name, material or scent…">
+  </div>
+
+  <div class="content" id="main-content">
+
+    <!-- WORKING FILTERS -->
+    <aside class="filters">
+      <div class="filters-head">
+        <h2>Filters</h2>
+        <button type="button" id="clear" class="reset-link">Reset All</button>
+      </div>
+
+      <p class="filter-label">Category (multi-select)</p>
+      <label><input type="checkbox" class="f-cat" value="drinkware"> Drinkware &amp; Tableware</label>
+      <label><input type="checkbox" class="f-cat" value="candles"> Candles &amp; Home Fragrance</label>
+      <label><input type="checkbox" class="f-cat" value="decor"> Incense &amp; Decor Accents</label>
+
+      <div class="facet-panel">
+        <div class="facet-panel-head">
+          <span class="facet-panel-title">Volume &amp; Size Facets</span>
+          <span class="pill-contextual">Contextual</span>
+        </div>
+
+        <div class="facet-block" id="facet-drinkware" hidden>
+          <p class="facet-group-title">Mugs &amp; Cups – Capacity</p>
+          <label><input type="checkbox" class="f-cap" value="under"> &lt; 200 ml <small>(Espresso &amp; Small)</small></label>
+          <label><input type="checkbox" class="f-cap" value="standard"> 200 – 350 ml <small>(Standard Mugs)</small></label>
+          <label><input type="checkbox" class="f-cap" value="over"> &gt; 350 ml <small>(Large / Jumbo)</small></label>
+        </div>
+
+        <div class="facet-block" id="facet-candles" hidden>
+          <p class="facet-group-title">Candles – Volume &amp; Burn</p>
+          <label><input type="checkbox" class="f-jar" value="small"> ≤ 250 ml <small>(Petite / ~220 ml jars)</small></label>
+          <label><input type="checkbox" class="f-jar" value="medium"> 250 – 350 ml <small>(Classic / ~300 ml jars)</small></label>
+          <label><input type="checkbox" class="f-burn" value="short"> &lt; 25 h burn <small>(Petite)</small></label>
+          <label><input type="checkbox" class="f-burn" value="long"> 25 h + <small>(Long burn)</small></label>
+        </div>
+
+        <div class="facet-block" id="facet-decor" hidden>
+          <p class="facet-group-title">Decor Accents – Size</p>
+          <label><input type="checkbox" class="f-dsize" value="small"> ≤ 10 cm <small>(Vases / desk size)</small></label>
+          <label><input type="checkbox" class="f-dsize" value="medium"> &gt; 10 cm <small>(Trays &amp; Trinket Sets)</small></label>
+        </div>
+
+        <p class="facet-note">* Contextual facets — the attribute naturally correlates with the product nature, keeping the catalog logical across diverse object types.</p>
+      </div>
+
+      <p class="filter-label">Personalization</p>
+      <label><input type="radio" name="pers" value="all" checked> All Products</label>
+      <label><input type="radio" name="pers" value="custom"> Customizable Only <small>(Stamped text)</small></label>
+      <label><input type="radio" name="pers" value="standard"> Standard Ready-to-Ship</label>
+
+      <p class="filter-label price-label">Max Price <span id="price-live">110 PLN</span></p>
+      <input type="range" id="price-max" class="price-range" min="15" max="110" step="5" value="110" aria-label="Maximum price">
+      <div class="range-ends"><span>15 PLN</span><span>110 PLN</span></div>
+
+      <button type="button" id="apply" class="btn-apply">Apply Filters</button>
+    </aside>
+
+    <!-- RESULTS -->
+    <main class="results">
+      <!-- Active filter chips -->
+      <div class="chips" id="chips" aria-label="Active filters"></div>
+
+      <div class="results-head">
+        <p class="results-meta" id="meta">8 products found</p>
+        <div class="sort">
+          <label for="sort">Sort by</label>
+          <select id="sort">
+            <option value="newest">Newest first</option>
+            <option value="price-asc">Price: low → high</option>
+            <option value="price-desc">Price: high → low</option>
+            <option value="name">Name: A → Z</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid" id="grid"></div>
+
+      <div class="empty" id="empty" hidden>
+        <p><strong>No products match your filters.</strong></p>
+        <p>Try removing a filter or widening the price range.</p>
+      </div>
+    </main>
+  </div>
+
+  <footer class="pagenote">
+    <span>© 2026 Tuen Creations · Handcrafted Studio</span>
+    <span>
+      <a href="index.html">Shop</a> &nbsp;·&nbsp;
+      <a href="index.html#cat=candles">New In</a> &nbsp;·&nbsp;
+      <a href="#">Shipping &amp; Returns</a> &nbsp;·&nbsp;
+      <a href="#">Contact</a>
+    </span>
+  </footer>
+
+</div>
+
+<script src="products.js"></script>
+<script src="store.js"></script>
+<script>
+(function () {
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  const meta = document.getElementById('meta');
+
+  const SORT_LABELS = {
+    "newest": "Newest first",
+    "price-asc": "Price: low → high",
+    "price-desc": "Price: high → low",
+    "name": "Name: A → Z"
+  };
+
+  function selected(list) {
+    return [...document.querySelectorAll(list)];
+  }
+
+  // Nav category links (#cat=...) and catalog search (#q=...) actually drive the filters
+  function applyHash() {
+    const params = new URLSearchParams(location.hash.slice(1));
+    if (params.has('cat')) {
+      const c = params.get('cat');
+      document.querySelectorAll('.f-cat').forEach(x =>
+        x.checked = c !== 'all' && x.value === c);
+    }
+    if (params.has('q')) {
+      document.getElementById('search').value = params.get('q');
+    }
+    render();
+  }
+
+  function updateNav(cats) {
+    const single = cats.length === 1 ? cats[0] : (cats.length === 0 ? 'all' : null);
+    document.querySelectorAll('.nav a[data-cat]').forEach(a =>
+      a.classList.toggle('active', a.dataset.cat === single));
+  }
+
+  function render() {
+    // --- read filters ---
+    const cats = selected('.f-cat:checked').map(i => i.value);
+    const pers = document.querySelector('input[name="pers"]:checked').value;
+    const q = document.getElementById('search').value.trim().toLowerCase();
+    const max = parseFloat(document.getElementById('price-max').value) || 110;
+    const sort = document.getElementById('sort').value;
+
+    // --- contextual facets follow the selected categories ---
+    const capVals = selected('.f-cap:checked').map(i => i.value);
+    const burnVals = selected('.f-burn:checked').map(i => i.value);
+    const jarVals = selected('.f-jar:checked').map(i => i.value);
+    const sizeVals = selected('.f-dsize:checked').map(i => i.value);
+    const hasDW = cats.length === 0 || cats.includes('drinkware');
+    const hasCND = cats.length === 0 || cats.includes('candles');
+    const hasDEC = cats.length === 0 || cats.includes('decor');
+    document.getElementById('facet-drinkware').hidden = !hasDW;
+    document.getElementById('facet-candles').hidden = !hasCND;
+    document.getElementById('facet-decor').hidden = !hasDEC;
+
+    // --- filter ---
+    let list = PRODUCTS.filter(p => {
+      if (cats.length && !cats.includes(p.cat)) return false;
+      // drinkware: capacity in ml (facets belong to this category only)
+      if (capVals.length && p.cat === 'drinkware') {
+        if (p.capacity < 200 && !capVals.includes('under')) return false;
+        if (p.capacity >= 200 && p.capacity <= 350 && !capVals.includes('standard')) return false;
+        if (p.capacity > 350 && !capVals.includes('over')) return false;
+      }
+      // candles: burn time
+      if (burnVals.length && p.cat === 'candles') {
+        const long = (p.burnTime || 0) >= 25;
+        if (long && !burnVals.includes('long')) return false;
+        if (!long && !burnVals.includes('short')) return false;
+      }
+      // candles: jar volume
+      if (jarVals.length && p.cat === 'candles') {
+        if (p.capacity < 250 && !jarVals.includes('small')) return false;
+        if (p.capacity >= 250 && !jarVals.includes('medium')) return false;
+      }
+      // decor: physical size (cm from the item's largest dimension)
+      if (sizeVals.length && p.cat === 'decor') {
+        const small = (p.sizeCm || 0) <= 10;
+        if (small && !sizeVals.includes('small')) return false;
+        if (!small && !sizeVals.includes('medium')) return false;
+      }
+      if (pers === 'custom' && !p.customizable) return false;
+      if (pers === 'standard' && p.customizable) return false;
+      if (p.price < 15 || p.price > max) return false;
+      if (q && !(p.name + ' ' + p.material).toLowerCase().includes(q)) return false;
+      return true;
+    });
+
+    // --- sort ---
+    list = list.slice().sort((a, b) => {
+      switch (sort) {
+        case 'price-asc':  return a.price - b.price;
+        case 'price-desc': return b.price - a.price;
+        case 'name':       return a.name.localeCompare(b.name);
+        default:           return a.days - b.days;      // newest first
+      }
+    });
+
+    // --- draw ---
+    grid.innerHTML = list.map(p => {
+      const img = p.image
+        ? `<img src="${p.image}" alt="${p.name} – product photo">`
+        : `<span class="img-ph">${p.name}</span>`;
+      const spec = p.cat === 'candles'
+        ? (p.capNote + ' · ~' + p.burnTime + ' h')
+        : (p.cat === 'decor' ? p.sizeCm + ' cm' : p.capNote);
+      const faved = window.Store && Store.isFav(p.id);
+      return `
+      <article class="card">
+        <a class="card-link" href="detail.html?id=${p.id}">
+          <div class="img">
+            <span class="badge-float">${p.customizable ? 'Customizable' : 'Ready-to-Ship'}</span>
+            ${img}
+          </div>
+          <div class="card-body">
+            <p class="card-cat">${CAT_LABELS[p.cat]}</p>
+            <h3 class="card-title">${p.name}</h3>
+            <p class="card-meta"><strong>Material:</strong> ${p.material}</p>
+            <p class="card-meta"><strong>Size / Spec:</strong> ${spec}</p>
+            <p class="price">${p.price} PLN</p>
+          </div>
+        </a>
+        <div class="card-actions">
+          <button type="button" class="fav-btn ${faved ? 'is-fav' : ''}" data-fav="${p.id}"
+                  aria-pressed="${faved}" aria-label="${faved ? 'Remove from' : 'Add to'} favorites">
+            ${faved ? '♥' : '♡'}
+          </button>
+          <button type="button" class="add-btn" data-add="${p.id}" aria-label="Add to cart">Add to Cart</button>
+          <a class="view-details" href="detail.html?id=${p.id}">View Details ›</a>
+        </div>
+      </article>`;
+    }).join('');
+
+    // --- active filter chips ---
+    const CAP_LABELS = { under: '< 200 ml', standard: '200–350 ml', over: '> 350 ml' };
+    const BURN_LABELS = { short: '< 25 h burn', long: '25 h+ burn' };
+    const JAR_LABELS = { small: 'jar ≤ 250 ml', medium: 'jar 250–350 ml' };
+    const SIZE_LABELS = { small: 'size ≤ 10 cm', medium: 'size > 10 cm' };
+    const chips = [];
+    cats.forEach(c => chips.push({ t: 'cat', v: c, l: CAT_LABELS[c] }));
+    capVals.forEach(c => chips.push({ t: 'cap', v: c, l: 'Mugs: ' + CAP_LABELS[c] }));
+    burnVals.forEach(c => chips.push({ t: 'burn', v: c, l: 'Candles: ' + BURN_LABELS[c] }));
+    jarVals.forEach(c => chips.push({ t: 'jar', v: c, l: 'Candles: ' + JAR_LABELS[c] }));
+    sizeVals.forEach(c => chips.push({ t: 'size', v: c, l: 'Decor: ' + SIZE_LABELS[c] }));
+    if (pers === 'custom') chips.push({ t: 'pers', l: 'Customizable only' });
+    if (pers === 'standard') chips.push({ t: 'pers', l: 'Ready-to-Ship only' });
+    if (max < 110) chips.push({ t: 'price', l: 'Up to ' + max + ' PLN' });
+    if (q) chips.push({ t: 'search', l: '“' + q + '”' });
+    const chipsEl = document.getElementById('chips');
+    chipsEl.innerHTML = chips.length
+      ? chips.map(c =>
+          `<span class="chip">${c.l}<button type="button" class="chip-x" data-type="${c.t}" data-val="${c.v || ''}" aria-label="Remove filter ${c.l}">✕</button></span>`
+        ).join('') + '<button type="button" class="chip chip-clear" data-type="all">Clear all filters</button>'
+      : '';
+
+    empty.hidden = list.length !== 0;
+    meta.textContent = list.length + ' product' + (list.length === 1 ? '' : 's') +
+                       ' found · sorted by ' + SORT_LABELS[sort];
+    updateNav(cats);
+  }
+
+  document.getElementById('apply').addEventListener('click', render);
+  document.getElementById('clear').addEventListener('click', () => {
+    document.querySelectorAll('.f-cat, .f-cap, .f-burn, .f-jar, .f-dsize, input[name="pers"][value="all"], #search')
+      .forEach(el => {
+        if (el.type === 'checkbox') el.checked = false;
+        else if (el.type === 'radio') el.checked = true;
+        else el.value = '';
+      });
+    resetPrice();
+    render();
+  });
+  document.querySelectorAll('.filters input, #sort').forEach(el =>
+    el.addEventListener('change', render));
+  document.getElementById('search').addEventListener('input', render);
+
+  function resetPrice() {
+    const s = document.getElementById('price-max');
+    s.value = 110;
+    document.getElementById('price-live').textContent = '110 PLN';
+  }
+  document.getElementById('price-max').addEventListener('input', e =>
+    document.getElementById('price-live').textContent = e.target.value + ' PLN');
+
+  // Active filter chips: ✕ removes that single filter
+  document.getElementById('chips').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    const type = b.dataset.type;
+    if (type === 'all') {
+      document.getElementById('clear').click();
+      return;
+    }
+    if (type === 'cat') {
+      const cb = document.querySelector('.f-cat[value="' + b.dataset.val + '"]');
+      if (cb) cb.checked = false;
+    } else if (type === 'cap') {
+      const cb = document.querySelector('.f-cap[value="' + b.dataset.val + '"]');
+      if (cb) cb.checked = false;
+    } else if (type === 'burn') {
+      const cb = document.querySelector('.f-burn[value="' + b.dataset.val + '"]');
+      if (cb) cb.checked = false;
+    } else if (type === 'jar') {
+      const cb = document.querySelector('.f-jar[value="' + b.dataset.val + '"]');
+      if (cb) cb.checked = false;
+    } else if (type === 'size') {
+      const cb = document.querySelector('.f-dsize[value="' + b.dataset.val + '"]');
+      if (cb) cb.checked = false;
+    } else if (type === 'pers') {
+      document.querySelector('input[name="pers"][value="all"]').checked = true;
+    } else if (type === 'price') {
+      document.getElementById('price-max').value = 110;
+      document.getElementById('price-live').textContent = '110 PLN';
+    } else if (type === 'search') {
+      document.getElementById('search').value = '';
+    }
+    render();
+  });
+
+  // Card action buttons (favorite / add to cart) – event delegation
+  grid.addEventListener('click', e => {
+    const fav = e.target.closest('button[data-fav]');
+    const add = e.target.closest('button[data-add]');
+    if (fav) {
+      const on = Store.toggleFav(fav.dataset.fav);
+      fav.classList.toggle('is-fav', on);
+      fav.setAttribute('aria-pressed', on);
+      fav.textContent = on ? '♥' : '♡';
+      StoreUI.refreshBadges();
+    } else if (add) {
+      Store.addCart(add.dataset.add);
+      StoreUI.refreshBadges();
+      add.textContent = '✓';
+      setTimeout(() => { add.textContent = '🛒'; }, 1200);
+    }
+  });
+  document.addEventListener('store:change', render);
+
+  window.addEventListener('hashchange', applyHash);
+  applyHash();
+})();
+</script>
+
+</body>
+</html>
