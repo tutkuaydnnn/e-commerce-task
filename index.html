@@ -752,6 +752,8 @@
       renderProducts(CATALOG_PRODUCTS);
       updateContextualFacetVisibility();
       updateSliderVisuals();
+      // Sayfa doğrudan #urun-id hash'iyle açıldıysa ilgili detay sayfasını göster
+      routeFromHash();
     };
 
     // ------------------------------------------------------------
@@ -927,6 +929,10 @@
     }
 
     function navigateToCatalog(optionalCategory) {
+      // Detay sayfasındayken URL'deki #urun hash'ini temizle (geçmiş girdisini bozmadan)
+      if (location.hash && location.hash !== '#') {
+        history.replaceState(null, '', location.pathname + location.search);
+      }
       if (optionalCategory) {
         setTopCategory(optionalCategory);
       }
@@ -935,9 +941,31 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function openProductDetail(productId) {
+    // Browser back/forward button support: URL hash (#urun-id) drives the view
+    function routeFromHash() {
+      const h = decodeURIComponent((location.hash || '').replace(/^#/, ''));
+      const prod = CATALOG_PRODUCTS.find(p => p.id === h);
+      if (prod) {
+        const detailHidden = document.getElementById('view-detail').classList.contains('hidden');
+        if (detailHidden || !currentProduct || currentProduct.id !== prod.id) {
+          openProductDetail(prod.id, true);
+        }
+      } else if (!document.getElementById('view-detail').classList.contains('hidden')) {
+        // hash boş/bilinmeyen ama hâlâ detay sayfasındaysa → kataloğa dön
+        navigateToCatalog();
+      }
+    }
+    window.addEventListener('hashchange', routeFromHash);
+
+    function openProductDetail(productId, fromHash) {
       const prod = CATALOG_PRODUCTS.find(p => p.id === productId);
       if (!prod) return;
+      // Back-button desteği: normal çağrılarda hash'e yaz; hashchange
+      // routeFromHash'i tetikleyip (fromHash=true) populate tekrar çalışır
+      if (!fromHash && location.hash !== '#' + productId) {
+        location.hash = productId;
+        return;
+      }
       currentProduct = prod;
 
       // Populate Detail View
