@@ -1,0 +1,125 @@
+{
+  "categories": {
+    "labels": {
+      "drinkware": "Drinkware & Tableware",
+      "candles": "Candles & Home Fragrance",
+      "decor": "Incense & Decor Accents"
+    },
+    "subcategories": {
+      "drinkware": "Drinkware & Tableware > Mugs & Cups",
+      "candles": "Candles & Home Fragrance > Jar Candles",
+      "decor": "Incense & Decor Accents > Sculptural Decor"
+    }
+  },
+  "products": [
+    {
+      "id": "cute-little-cup",
+      "name": "Cute Little Cup – Footed Smiley Mug & Saucer Set",
+      "category": "drinkware",
+      "material": "Stoneware Ceramic",
+      "capacity_ml": 220,
+      "capacity_note": "220 ml + saucer",
+      "customizable": false,
+      "price_pln": 49,
+      "dimensions": "8 cm height + 14 cm saucer",
+      "care": "Dishwasher & microwave safe",
+      "availability": "Ready to ship in 2–3 days",
+      "images": ["cutelittlecup.jpeg", "cutelittlecup2.jpeg", "cutelittlecup3.jpeg"],
+      "description": "An adorable cream cup sitting happily on its matching saucer, with a hand-painted smiling face, glossy chocolate feet and \u201cCUTE LITTLE CUP\u201d written around the plate rim. Sized for a small cappuccino or cocoa — the photo shows it filled with marshmallow hot chocolate. Each face is painted by hand, so every little cup has its own personality."
+    },
+    {
+      "id": "gingerbread",
+      "name": "Gingerbread Man White Mug",
+      "category": "drinkware",
+      "material": "Stoneware Ceramic (hand-glazed)",
+      "capacity_ml": 350,
+      "capacity_note": "350 ml",
+      "customizable": true,
+      "price_pln": 45,
+      "dimensions": "9.5 cm height × 8 cm diameter",
+      "care": "Dishwasher & microwave safe",
+      "availability": "Made to order · ships in 5–7 days",
+      "images": ["gingerbreadkupa2.jpg", "gingerbreadkupa.jpg", "gingerbreadkupa3.jpg"],
+      "description": "A cream-white stoneware mug with a candy-cane striped handle and a sculpted gingerbread man peeking over the rim. Hand-painted fairy lights with tiny colored dots run around the body, stamped with a cheerful \u201cMerry Xmas Sweet\u201d message. Fully customizable — add your own words under the glaze for a one-of-a-kind holiday gift. The photos show it styled with a marshmallow hot chocolate for cozy winter evenings."
+    },
+    {
+      "id": "today-is-your-day",
+      "name": "\u201cToday is Your Day\u201d Mug",
+      "category": "drinkware",
+      "material": "Stoneware Ceramic",
+      "capacity_ml": 250,
+      "capacity_note": "250 ml",
+      "customizable": true,
+      "price_pln": 32,
+      "dimensions": "9 cm height × 8 cm diameter",
+      "care": "Dishwasher & microwave safe",
+      "availability": "Made to order · ships in 5–7 days",
+      "images": ["kalplikupayazılı.jpg", "kalplikupa.jpg"],
+      "description": "A soft cream mug with a secret hidden inside: \u201cToday is Your Day\u201d is hand-stamped with tiny red hearts at the bottom of the cup, revealed as you finish your drink. The outside is painted with scattered red hearts on a warm cream glaze (see second photo), keeping the theme inside and out. A joyful little morning ritual — or a meaningful motivational gift for someone who needs the reminder."
+    },
+    {
+      "id": "botanical-candle",
+      "name": "Scented Botanical Soy Jar Candle",
+      "category": "candles",
+      "material": "Natural Soy Wax",
+      "capacity_ml": 300,
+      "capacity_note": "300 ml jar",
+      "burn_time_hours": 35,
+      "customizable": false,
+      "price_pln": 42,
+      "dimensions": "9 cm height × 8 cm diameter glass jar",
+      "care": "Trim wick to 5 mm before each use",
+      "availability": "Ready to ship in 2–3 days",
+      "images": [],
+      "description": "A slow-burning soy wax candle poured into a reusable glass jar, decorated with dried botanicals. Choose a scent: vanilla & lavender, fresh linen or warm tonka. Around 35 hours of clean burn time."
+    },
+    {
+      "id": "surprise-candle",
+      "name": "Surprise Message Candle",
+      "category": "candles",
+      "material": "Natural Soy Wax",
+      "capacity_ml": 220,
+      "capacity_note": "220 ml jar",
+      "burn_time_hours": 22,
+      "customizable": true,
+      "price_pln": 39,
+      "dimensions": "8 cm height × 8 cm diameter glass jar",
+      "care": "Trim wick to 5 mm before each use",
+      "availability": "Made to order · ships in 5–7 days",
+      "images": [],
+      "description": "As the candle burns down, a hidden surprise message is revealed inside the jar — your custom words printed on heat-resistant paper. A unique birthday, wedding or thank-you gift in a reusable glass."
+    },
+    {
+      "id": "incense-tray",
+      "name": "Minimalist Incense Tray",
+      "category": "decor",
+      "material": "Terracotta",
+      "capacity_ml": null,
+      "capacity_note": null,
+      "size_cm": 12,
+      "customizable": false,
+      "price_pln": 19,
+      "dimensions": "12 cm × 6 cm",
+      "care": "Wipe clean with a damp cloth",
+      "availability": "Ready to ship in 2–3 days",
+      "images": [],
+      "description": "A minimal terracotta tray for stick and cone incense, with a small catchment dish for ash. Its raw, matte surface brings a calm, natural accent to any desk or sideboard."
+    },
+    {
+      "id": "mini-planter",
+      "name": "Mini Ceramic Planter",
+      "category": "decor",
+      "material": "Terracotta",
+      "capacity_ml": null,
+      "capacity_note": null,
+      "size_cm": 8,
+      "customizable": false,
+      "price_pln": 22,
+      "dimensions": "8 cm height × 7 cm diameter",
+      "care": "Drainage hole included · wipe clean",
+      "availability": "Ready to ship in 2–3 days",
+      "images": [],
+      "description": "A small hand-thrown terracotta planter for succulents and cacti, with a matching drip dish. Unglazed outside for a natural look, sealed inside for watering."
+    }
+  ]
+}

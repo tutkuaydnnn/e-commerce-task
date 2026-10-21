@@ -1,386 +1,1331 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Tuen Creations – Catalog Listing</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tuen Creations - Handcrafted Home & Living Studio</title>
+  <link rel="icon" type="image/png" href="img/logo.png">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Playfair Display & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: '#764654', // Dusty artisanal plum / rose from user design
+              primaryHover: '#5e3442',
+              lightBg: '#fbf7f6',
+              cardBg: '#ffffff',
+              border: '#eededc',
+              accent: '#d48d79',
+              badge: '#f7ece9'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Smooth transitions and custom styling */
+    body {
+      background-color: #faf5f5;
+      color: #3b282d;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e2cbcd;
+      border-radius: 9999px;
+    }
+
+    /* Custom Pointer-Based Dual Range Slider */
+    .dual-slider-wrapper {
+      position: relative;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      user-select: none;
+      touch-action: none;
+      cursor: pointer;
+    }
+    .dual-slider-base-track {
+      position: absolute;
+      width: 100%;
+      height: 6px;
+      background: #eededc;
+      border-radius: 9999px;
+    }
+    .dual-slider-active-track {
+      position: absolute;
+      height: 6px;
+      background: #764654;
+      border-radius: 9999px;
+      z-index: 1;
+    }
+    .slider-handle {
+      position: absolute;
+      top: 50%;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #764654;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.22);
+      transform: translate(-50%, -50%);
+      cursor: grab;
+      z-index: 3;
+      transition: box-shadow 0.15s ease, transform 0.1s ease;
+    }
+    .slider-handle:active, .slider-handle.dragging {
+      cursor: grabbing;
+      transform: translate(-50%, -50%) scale(1.18);
+      box-shadow: 0 3px 8px rgba(118, 70, 84, 0.4);
+    }
+  </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col font-sans antialiased text-gray-800">
 
-<a class="skip-link" href="#main-content">Skip to main content</a>
+  <!-- Toast Notification Container -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-brand-primary text-white px-5 py-3 rounded-xl shadow-xl flex items-center space-x-3 pointer-events-none">
+    <svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    <span id="toast-message" class="text-sm font-medium">Notification message</span>
+  </div>
 
-<div class="frame">
+  <!-- Studio Header -->
+  <header class="bg-gradient-to-r from-[#7a4655] to-[#673947] text-white shadow-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Brand & Utilities -->
+      <div class="flex items-center justify-between py-4 border-b border-rose-300/20">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateToCatalog('All Products')">
+          <div class="w-12 h-12 bg-white/15 backdrop-blur rounded-full flex items-center justify-center border border-white/20 overflow-hidden">
+            <img src="img/logo.png" alt="Tuen Creations logo" class="w-9 h-9 object-contain">
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold font-serif tracking-wide text-white">TUEN CREATIONS</h1>
+            <p class="text-xs text-rose-200 tracking-wider uppercase font-medium">Handcrafted Home & Living Studio</p>
+          </div>
+        </div>
 
-  <!-- HEADER: logo + catalog name + category navigation -->
-  <header class="header">
-    <div class="brand-row">
-      <a class="brand" href="index.html">
-        <span class="brand-badge"><img src="img/logo.png" alt="Tuen Creations – back to homepage"></span>
-        <span class="brand-text">
-          <span class="brand-name">Tuen Creations</span>
-          <span class="subtitle">Handcrafted Home &amp; Living Studio</span>
-        </span>
-      </a>
-      <div class="header-right">
-        <button type="button" class="notes-pill" id="notes-pill" aria-haspopup="true" aria-expanded="false">ⓘ Instructor Notes &amp; Taxonomy</button>
+        <div class="flex items-center space-x-4">
+          <!-- Wishlist Badge -->
+          <div class="relative p-2 rounded-full hover:bg-white/10 cursor-pointer transition">
+            <svg class="w-5 h-5 text-rose-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+            <span id="saved-count" class="absolute top-1 right-1 bg-amber-400 text-stone-900 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+          </div>
+          <!-- Cart Badge -->
+          <div class="relative p-2 rounded-full hover:bg-white/10 cursor-pointer transition" onclick="showToast('Your shopping cart is ready for checkout!')">
+            <svg class="w-5 h-5 text-rose-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+            <span id="cart-count" class="absolute top-1 right-1 bg-amber-400 text-stone-900 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+          </div>
+        </div>
       </div>
+
+      <!-- Category Navigation (Slide requirement: Logical navigation) -->
+      <nav class="flex space-x-6 sm:space-x-8 overflow-x-auto py-3 text-sm font-medium whitespace-nowrap scrollbar-none" id="category-nav">
+        <button onclick="setTopCategory('All Products')" data-cat="All Products" class="cat-nav-btn text-amber-200 border-b-2 border-amber-300 pb-1 font-semibold transition">
+          All Products
+        </button>
+        <button onclick="setTopCategory('Drinkware & Tableware')" data-cat="Drinkware & Tableware" class="cat-nav-btn text-rose-100/80 hover:text-white border-b-2 border-transparent pb-1 transition">
+          Drinkware & Tableware
+        </button>
+        <button onclick="setTopCategory('Candles & Home Fragrance')" data-cat="Candles & Home Fragrance" class="cat-nav-btn text-rose-100/80 hover:text-white border-b-2 border-transparent pb-1 transition">
+          Candles & Home Fragrance
+        </button>
+        <button onclick="setTopCategory('Incense & Decor Accents')" data-cat="Incense & Decor Accents" class="cat-nav-btn text-rose-100/80 hover:text-white border-b-2 border-transparent pb-1 transition">
+          Incense & Decor Accents
+        </button>
+      </nav>
     </div>
-    <nav class="nav">
-      <a href="index.html#cat=all" data-cat="all" class="active">All Products</a>
-      <a href="index.html#cat=drinkware" data-cat="drinkware">Drinkware &amp; Tableware</a>
-      <a href="index.html#cat=candles" data-cat="candles">Candles &amp; Home Fragrance</a>
-      <a href="index.html#cat=decor" data-cat="decor">Incense &amp; Decor Accents</a>
-    </nav>
   </header>
 
-  <!-- SEARCH BAR (filters live, case-insensitive) -->
-  <div class="searchbar">
-    🔍
-    <label class="sr-only" for="search">Search products</label>
-    <input type="search" id="search" placeholder="Search by product name, material or scent…">
-  </div>
+  <!-- Main View Container -->
+  <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
 
-  <div class="content" id="main-content">
-
-    <!-- WORKING FILTERS -->
-    <aside class="filters">
-      <div class="filters-head">
-        <h2>Filters</h2>
-        <button type="button" id="clear" class="reset-link">Reset All</button>
-      </div>
-
-      <p class="filter-label">Category (multi-select)</p>
-      <label><input type="checkbox" class="f-cat" value="drinkware"> Drinkware &amp; Tableware</label>
-      <label><input type="checkbox" class="f-cat" value="candles"> Candles &amp; Home Fragrance</label>
-      <label><input type="checkbox" class="f-cat" value="decor"> Incense &amp; Decor Accents</label>
-
-      <div class="facet-panel">
-        <div class="facet-panel-head">
-          <span class="facet-panel-title">Volume &amp; Size Facets</span>
-          <span class="pill-contextual">Contextual</span>
+    <!-- Global Search Bar (Visible in BOTH Catalog Listing and Object Detail Pages) -->
+    <div class="mb-6">
+      <div class="relative bg-white rounded-2xl shadow-sm border border-brand-border overflow-hidden focus-within:ring-2 focus-within:ring-brand-primary">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-brand-primary">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         </div>
-
-        <div class="facet-block" id="facet-drinkware" hidden>
-          <p class="facet-group-title">Mugs &amp; Cups – Capacity</p>
-          <label><input type="checkbox" class="f-cap" value="under"> &lt; 200 ml <small>(Espresso &amp; Small)</small></label>
-          <label><input type="checkbox" class="f-cap" value="standard"> 200 – 350 ml <small>(Standard Mugs)</small></label>
-          <label><input type="checkbox" class="f-cap" value="over"> &gt; 350 ml <small>(Large / Jumbo)</small></label>
-        </div>
-
-        <div class="facet-block" id="facet-candles" hidden>
-          <p class="facet-group-title">Candles – Volume &amp; Burn</p>
-          <label><input type="checkbox" class="f-jar" value="small"> ≤ 250 ml <small>(Petite / ~220 ml jars)</small></label>
-          <label><input type="checkbox" class="f-jar" value="medium"> 250 – 350 ml <small>(Classic / ~300 ml jars)</small></label>
-          <label><input type="checkbox" class="f-burn" value="short"> &lt; 25 h burn <small>(Petite)</small></label>
-          <label><input type="checkbox" class="f-burn" value="long"> 25 h + <small>(Long burn)</small></label>
-        </div>
-
-        <div class="facet-block" id="facet-decor" hidden>
-          <p class="facet-group-title">Decor Accents – Size</p>
-          <label><input type="checkbox" class="f-dsize" value="small"> ≤ 10 cm <small>(Vases / desk size)</small></label>
-          <label><input type="checkbox" class="f-dsize" value="medium"> &gt; 10 cm <small>(Trays &amp; Trinket Sets)</small></label>
-        </div>
-
-        <p class="facet-note">* Contextual facets — the attribute naturally correlates with the product nature, keeping the catalog logical across diverse object types.</p>
-      </div>
-
-      <p class="filter-label">Personalization</p>
-      <label><input type="radio" name="pers" value="all" checked> All Products</label>
-      <label><input type="radio" name="pers" value="custom"> Customizable Only <small>(Stamped text)</small></label>
-      <label><input type="radio" name="pers" value="standard"> Standard Ready-to-Ship</label>
-
-      <p class="filter-label price-label">Max Price <span id="price-live">110 PLN</span></p>
-      <input type="range" id="price-max" class="price-range" min="15" max="110" step="5" value="110" aria-label="Maximum price">
-      <div class="range-ends"><span>15 PLN</span><span>110 PLN</span></div>
-
-      <button type="button" id="apply" class="btn-apply">Apply Filters</button>
-    </aside>
-
-    <!-- RESULTS -->
-    <main class="results">
-      <!-- Active filter chips -->
-      <div class="chips" id="chips" aria-label="Active filters"></div>
-
-      <div class="results-head">
-        <p class="results-meta" id="meta">8 products found</p>
-        <div class="sort">
-          <label for="sort">Sort by</label>
-          <select id="sort">
-            <option value="newest">Newest first</option>
-            <option value="price-asc">Price: low → high</option>
-            <option value="price-desc">Price: high → low</option>
-            <option value="name">Name: A → Z</option>
-          </select>
+        <input 
+          type="text" 
+          id="search-input" 
+          placeholder="Search handcrafted products by name, ceramic material, aroma, or holiday collection..." 
+          class="w-full pl-11 pr-24 py-3.5 text-sm bg-transparent border-none focus:outline-none placeholder-gray-400"
+          oninput="handleSearch()"
+        >
+        <div class="absolute inset-y-0 right-1.5 flex items-center">
+          <button onclick="resetAllFilters()" class="text-xs text-stone-500 hover:text-brand-primary px-3 py-1.5 rounded-lg hover:bg-stone-100 transition">
+            Clear
+          </button>
         </div>
       </div>
+    </div>
 
-      <div class="grid" id="grid"></div>
+    <!-- ========================================== -->
+    <!-- VIEW 1: CATALOG LISTING PAGE               -->
+    <!-- ========================================== -->
+    <div id="view-listing" class="transition-opacity duration-300">
 
-      <div class="empty" id="empty" hidden>
-        <p><strong>No products match your filters.</strong></p>
-        <p>Try removing a filter or widening the price range.</p>
+      <!-- Main Listing Body (Sidebar Filters + Results Grid) -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <!-- SIDEBAR: FILTERS -->
+        <aside class="lg:col-span-1">
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-brand-border sticky top-36">
+            
+            <div class="flex items-center justify-between pb-3 border-b border-stone-200 mb-5">
+              <h2 class="font-serif text-lg font-bold text-brand-primary">Filters</h2>
+              <button onclick="resetAllFilters()" class="text-xs text-brand-primary hover:underline font-medium">Reset All</button>
+            </div>
+
+            <div class="space-y-6 text-sm">
+              
+              <!-- Filter 1: Category (Multi-select) -->
+              <div>
+                <h3 class="font-semibold text-xs tracking-wider uppercase text-stone-600 mb-3 flex items-center justify-between">
+                  <span>Category (Multi-Select)</span>
+                </h3>
+                <div class="space-y-2">
+                  <label class="flex items-center gap-2.5 cursor-pointer text-stone-700 hover:text-brand-primary">
+                    <input type="checkbox" name="category" value="Drinkware & Tableware" onchange="applyFilters()" class="rounded text-brand-primary focus:ring-brand-primary">
+                    <span>Drinkware & Tableware</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 cursor-pointer text-stone-700 hover:text-brand-primary">
+                    <input type="checkbox" name="category" value="Candles & Home Fragrance" onchange="applyFilters()" class="rounded text-brand-primary focus:ring-brand-primary">
+                    <span>Candles & Home Fragrance</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 cursor-pointer text-stone-700 hover:text-brand-primary">
+                    <input type="checkbox" name="category" value="Incense & Decor Accents" onchange="applyFilters()" class="rounded text-brand-primary focus:ring-brand-primary">
+                    <span>Incense & Decor Accents</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Contextual Facets Block (Addressing teacher's feedback) -->
+              <div class="p-3.5 bg-rose-50/60 rounded-xl border border-rose-100">
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="font-semibold text-xs tracking-wider uppercase text-brand-primary">Volume & Size Facets</h3>
+                  <span class="text-[10px] bg-rose-200/80 text-brand-primary px-1.5 py-0.5 rounded font-medium">Contextual</span>
+                </div>
+                
+                <!-- Mug Capacity Facet -->
+                <div id="facet-drinkware" class="mb-4">
+                  <p class="text-xs font-semibold text-stone-700 mb-1.5">Mugs & Cups — Capacity</p>
+                  <div class="space-y-1.5 text-xs text-stone-600 pl-1">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="capacity" value="small" onchange="applyFilters()" class="rounded text-brand-primary focus:ring-brand-primary">
+                      <span>&lt; 200 ml (Espresso & Small)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="capacity" value="medium" onchange="applyFilters()" class="rounded text-brand-primary focus:ring-brand-primary">
+                      <span>200 – 350 ml (Standard Mugs)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="capacity" value="large" onchange="applyFilters()" class="rounded text-brand-primary focus:ring-brand-primary">
+                      <span>&gt; 350 ml (Large / Jumbo)</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Candle Volume Facet -->
+                <div id="facet-candles" class="mb-4">
+                  <p class="text-xs font-semibold text-stone-700 mb-1.5">Candles — Volume & Burn</p>
+                  <div class="space-y-1.5 text-xs text-stone-600 pl-1">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="candle-cap" value="petite" onchange="applyFilters()" class="rounded text-brand-primary focus:ring-brand-primary">
+                      <span>≤ 250 ml (Petite / ~22h burn)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="candle-cap" value="classic" onchange="applyFilters()" class="rounded text-brand-primary focus:ring-brand-primary">
+                      <span>250 – 350 ml (Classic / ~35h burn)</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Decor Dimensions Facet -->
+                <div id="facet-decor">
+                  <p class="text-xs font-semibold text-stone-700 mb-1.5">Decor Accents — Size</p>
+                  <div class="space-y-1.5 text-xs text-stone-600 pl-1">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="decor-size" value="compact" onchange="applyFilters()" class="rounded text-brand-primary focus:ring-brand-primary">
+                      <span>≤ 10 cm (Desk & Trinket Size)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="decor-size" value="standard" onchange="applyFilters()" class="rounded text-brand-primary focus:ring-brand-primary">
+                      <span>&gt; 10 cm (Planters & Vases)</span>
+                    </label>
+                  </div>
+                </div>
+
+                <p class="text-[11px] text-stone-500 mt-3 italic leading-tight">
+                  * Contextual facets: attributes dynamically correlate with product nature, keeping the catalog logical across diverse objects.
+                </p>
+              </div>
+
+              <!-- Filter 3: Personalization Option -->
+              <div>
+                <h3 class="font-semibold text-xs tracking-wider uppercase text-stone-600 mb-2.5">Personalization</h3>
+                <div class="space-y-2 text-stone-700">
+                  <label class="flex items-center gap-2.5 cursor-pointer">
+                    <input type="radio" name="customization" value="all" checked onchange="applyFilters()" class="text-brand-primary focus:ring-brand-primary">
+                    <span>All Products</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 cursor-pointer">
+                    <input type="radio" name="customization" value="customizable" onchange="applyFilters()" class="text-brand-primary focus:ring-brand-primary">
+                    <span>Customizable Only (Stamped text)</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 cursor-pointer">
+                    <input type="radio" name="customization" value="ready" onchange="applyFilters()" class="text-brand-primary focus:ring-brand-primary">
+                    <span>Standard Ready-to-Ship</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Price Filter: Pointer-Driven Dual Slider & Numeric Inputs -->
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <h3 class="font-semibold text-xs tracking-wider uppercase text-stone-600">Price Range (PLN)</h3>
+                  <span id="price-val" class="font-bold text-brand-primary text-xs">15 – 50 PLN</span>
+                </div>
+
+                <!-- Custom Dual Handle Pointer Track -->
+                <div id="dual-slider-root" class="dual-slider-wrapper mb-2">
+                  <div class="dual-slider-base-track"></div>
+                  <div id="slider-highlight" class="dual-slider-active-track" style="left: 0%; width: 100%;"></div>
+                  <div id="handle-min" class="slider-handle" style="left: 0%;" title="Minimum Price Handle"></div>
+                  <div id="handle-max" class="slider-handle" style="left: 100%;" title="Maximum Price Handle"></div>
+                </div>
+
+                <!-- Numeric Min / Max Input Fields -->
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <label class="block text-[10px] text-stone-500 font-medium mb-1">Min (PLN)</label>
+                    <input 
+                      type="number" 
+                      id="input-min-price" 
+                      min="15" 
+                      max="50" 
+                      value="15" 
+                      class="w-full px-2.5 py-1.5 border border-stone-200 rounded-lg text-stone-800 font-semibold focus:outline-none focus:ring-1 focus:ring-brand-primary" 
+                      oninput="onMinNumericChange(this.value)"
+                    >
+                  </div>
+                  <div>
+                    <label class="block text-[10px] text-stone-500 font-medium mb-1 text-right">Max (PLN)</label>
+                    <input 
+                      type="number" 
+                      id="input-max-price" 
+                      min="15" 
+                      max="50" 
+                      value="50" 
+                      class="w-full px-2.5 py-1.5 border border-stone-200 rounded-lg text-stone-800 font-semibold text-right focus:outline-none focus:ring-1 focus:ring-brand-primary" 
+                      oninput="onMaxNumericChange(this.value)"
+                    >
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <button onclick="applyFilters()" class="w-full mt-6 bg-brand-primary hover:bg-brand-primaryHover text-white py-2.5 rounded-xl font-medium text-xs tracking-wide uppercase transition shadow-sm">
+              Apply Filters
+            </button>
+          </div>
+        </aside>
+
+        <!-- PRODUCT GRID & ACTIVE PILLS -->
+        <section class="lg:col-span-3">
+          
+          <!-- Top bar: Active Filter Chips & Sort -->
+          <div class="bg-white p-4 rounded-2xl shadow-sm border border-brand-border mb-6 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex flex-wrap items-center gap-2" id="active-chips-container">
+              <span class="text-xs font-semibold text-stone-500">Active:</span>
+              <span id="results-count" class="text-xs bg-stone-100 text-stone-700 px-2.5 py-1 rounded-full font-medium">7 products</span>
+              <!-- Dynamically populated chips -->
+              <div id="filter-pills" class="flex flex-wrap items-center gap-2"></div>
+            </div>
+
+            <div class="flex items-center space-x-2 text-xs">
+              <label for="sort-select" class="text-stone-500 font-medium">Sort by:</label>
+              <select id="sort-select" onchange="applyFilters()" class="bg-stone-50 border border-stone-200 rounded-lg px-2.5 py-1.5 text-stone-700 focus:outline-none focus:ring-1 focus:ring-brand-primary">
+                <option value="newest">Featured / Newest</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Product Cards Grid -->
+          <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            <!-- Dynamically populated product cards -->
+          </div>
+
+          <!-- Empty State -->
+          <div id="empty-state" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-stone-300 p-8">
+            <div class="w-16 h-16 bg-rose-50 text-brand-primary rounded-full flex items-center justify-center mx-auto mb-3">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h3 class="text-lg font-bold font-serif text-stone-800 mb-1">No handcrafted objects matched</h3>
+            <p class="text-xs text-stone-500 max-w-sm mx-auto mb-5">Try relaxing your capacity, volume, or price constraints to discover items from our studio.</p>
+            <button onclick="resetAllFilters()" class="text-xs bg-brand-primary text-white px-4 py-2 rounded-xl font-medium hover:bg-brand-primaryHover transition">
+              Reset Filters
+            </button>
+          </div>
+
+        </section>
+
       </div>
-    </main>
-  </div>
+    </div>
 
-  <footer class="pagenote">
-    <span>© 2026 Tuen Creations · Handcrafted Studio</span>
-    <span>
-      <a href="index.html">Shop</a> &nbsp;·&nbsp;
-      <a href="index.html#cat=candles">New In</a> &nbsp;·&nbsp;
-      <a href="#">Shipping &amp; Returns</a> &nbsp;·&nbsp;
-      <a href="#">Contact</a>
-    </span>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: OBJECT DETAIL PAGE                 -->
+    <!-- ========================================== -->
+    <div id="view-detail" class="hidden transition-opacity duration-300">
+      
+      <!-- Breadcrumb Navigation -->
+      <nav class="flex items-center space-x-2 text-xs text-stone-500 mb-6 pb-2 border-b border-stone-200">
+        <button onclick="navigateToCatalog('All Products')" class="hover:text-brand-primary transition flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          <span>All Products</span>
+        </button>
+        <span>/</span>
+        <span id="detail-bc-cat" class="hover:text-brand-primary cursor-pointer" onclick="navigateToCatalog(currentProduct.category)">Category</span>
+        <span>/</span>
+        <span id="detail-bc-title" class="font-semibold text-stone-800 truncate max-w-xs">Product Title</span>
+      </nav>
+
+      <!-- Main Detail Layout -->
+      <div class="bg-white rounded-3xl shadow-sm border border-brand-border p-6 sm:p-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          
+          <!-- Product Visuals (Thumbnails + Gallery) -->
+          <div class="lg:col-span-6 space-y-4">
+            <div class="relative aspect-square rounded-2xl bg-stone-50 border border-stone-200 shadow-inner overflow-hidden">
+              <img id="detail-main-img" src="" alt="Main Product Photo" class="w-full h-full object-cover">
+              <div id="detail-badge-corner" class="absolute top-4 left-4 bg-white/95 backdrop-blur text-brand-primary text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
+                Customizable
+              </div>
+            </div>
+
+            <!-- Thumbnails Gallery -->
+            <div class="grid grid-cols-4 gap-3" id="detail-thumbs-container">
+              <!-- Dynamically populated thumbnails -->
+            </div>
+
+            <p class="text-[11px] text-stone-400 text-center italic">
+              All ceramic pieces are individual wheel-thrown & hand-painted originals.
+            </p>
+          </div>
+
+          <!-- Product Metadata & Actions -->
+          <div class="lg:col-span-6 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs text-stone-400 mb-1">
+                <span id="detail-breadcrumbs-path" class="uppercase tracking-wider font-semibold text-brand-accent">Drinkware & Tableware &gt; Mugs</span>
+                <span class="text-emerald-700 font-medium flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Studio Verified Original
+                </span>
+              </div>
+
+              <h2 id="detail-title" class="text-2xl sm:text-3xl font-serif font-bold text-stone-900 mb-3">
+                Product Title
+              </h2>
+
+              <!-- Price -->
+              <div class="flex items-baseline space-x-3 mb-6">
+                <span id="detail-price" class="text-3xl font-bold text-brand-primary">45 PLN</span>
+                <span class="text-xs text-stone-400">VAT included &bull; Handcrafted in Poland</span>
+              </div>
+
+              <!-- KEY ATTRIBUTES TABLE (Core requirement of web catalog) -->
+              <div class="mb-6 overflow-hidden rounded-xl border border-stone-200">
+                <table class="min-w-full divide-y divide-stone-200 text-xs text-left">
+                  <tbody class="divide-y divide-stone-100 bg-stone-50/50">
+                    <tr>
+                      <td class="px-4 py-2.5 font-semibold text-stone-600 bg-stone-100/70 w-2/5">Category Type</td>
+                      <td id="attr-category" class="px-4 py-2.5 text-stone-800 font-medium">Drinkware & Tableware</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2.5 font-semibold text-stone-600 bg-stone-100/70">Primary Material</td>
+                      <td id="attr-material" class="px-4 py-2.5 text-stone-800">Stoneware Ceramic (hand-glazed)</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2.5 font-semibold text-stone-600 bg-stone-100/70">Capacity / Volume</td>
+                      <td id="attr-capacity" class="px-4 py-2.5 text-stone-800 font-medium">350 ml</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2.5 font-semibold text-stone-600 bg-stone-100/70">Customization Option</td>
+                      <td id="attr-custom" class="px-4 py-2.5 text-stone-800">Yes – custom stamped message</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2.5 font-semibold text-stone-600 bg-stone-100/70">Dimensions / Spec</td>
+                      <td id="attr-dims" class="px-4 py-2.5 text-stone-800">9.5 cm height &times; 8 cm diameter</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2.5 font-semibold text-stone-600 bg-stone-100/70">Care Instructions</td>
+                      <td id="attr-care" class="px-4 py-2.5 text-stone-800">Dishwasher & microwave safe</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2.5 font-semibold text-stone-600 bg-stone-100/70">Availability & Dispatch</td>
+                      <td id="attr-avail" class="px-4 py-2.5 text-stone-800 text-emerald-800 font-medium">Made to order &bull; ships in 5–7 days</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Product Narrative Description -->
+              <div class="mb-6">
+                <h4 class="text-xs font-semibold text-stone-600 tracking-wider uppercase mb-2">Description & Artisan Notes</h4>
+                <p id="detail-desc" class="text-xs leading-relaxed text-stone-600">
+                  Detailed product narrative.
+                </p>
+              </div>
+
+              <!-- Made-to-order Custom Text Box (if customizable) -->
+              <div id="custom-input-box" class="mb-6 p-4 bg-rose-50/70 rounded-2xl border border-rose-200">
+                <label for="custom-text-input" class="block text-xs font-bold text-brand-primary mb-1">
+                  Custom Inscription Request
+                </label>
+                <p class="text-[11px] text-stone-500 mb-2">Specify the text, name, or festive phrase to be hand-stamped beneath the ceramic glaze before final kiln firing:</p>
+                <input 
+                  type="text" 
+                  id="custom-text-input" 
+                  placeholder="e.g. MERRY XMAS SWEET / TODAY IS YOUR DAY" 
+                  class="w-full text-xs px-3.5 py-2.5 bg-white border border-rose-300 rounded-xl focus:ring-2 focus:ring-brand-primary focus:outline-none placeholder-gray-400"
+                >
+                <span class="block text-[10px] text-stone-400 mt-1.5 italic">* Note: Hand-stamped before kiln firing. Customized ceramics are non-returnable.</span>
+              </div>
+
+              <!-- Purchase & Action CTAs -->
+              <div class="space-y-3 pt-2">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <button onclick="handleAddToCart()" class="sm:col-span-2 bg-brand-primary hover:bg-brand-primaryHover text-white py-3.5 px-6 rounded-xl font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-sm transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                    <span>Add to Cart</span>
+                  </button>
+                  <button onclick="handleOrderNow()" class="border-2 border-brand-primary text-brand-primary hover:bg-rose-50 py-3 px-4 rounded-xl font-semibold text-xs tracking-wider uppercase transition flex items-center justify-center gap-1.5">
+                    <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/></svg>
+                    <span>Order Now</span>
+                  </button>
+                </div>
+
+                <div class="flex items-center justify-between pt-2">
+                  <button onclick="toggleSaveCurrent()" id="detail-save-btn" class="text-xs text-stone-500 hover:text-brand-primary flex items-center gap-1.5 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                    <span>Save to Wishlist</span>
+                  </button>
+                  <button onclick="navigateToCatalog('All Products')" class="text-xs text-brand-primary font-medium hover:underline flex items-center gap-1">
+                    <span>&larr; Back to catalog listing</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Contact & Local Pickup Note (Slide requirement: contact/location) -->
+              <div class="mt-8 pt-4 border-t border-stone-200 text-xs text-stone-500 flex flex-wrap items-center justify-between gap-3">
+                <span class="flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                  <span>Inquiries: hello@tuencreations.com</span>
+                </span>
+                <span class="flex items-center gap-1.5 text-stone-600">
+                  <svg class="w-4 h-4 text-rose-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+                  <span>Ceramic Studio: Częstochowa / Kraków, PL (Free Local Pickup)</span>
+                </span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Studio Footer -->
+  <footer class="bg-white border-t border-stone-200 mt-12 py-8 text-xs text-stone-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <p class="font-medium text-stone-800">&copy; 2026 Tuen Creations &bull; Handcrafted Home &amp; Living Studio</p>
+        <p class="text-[11px] text-stone-400 mt-0.5">Designed according to the Fundamentals of Designing Web Catalogs principles.</p>
+      </div>
+      <div class="flex items-center space-x-6 text-stone-600">
+        <a href="javascript:void(0)" onclick="showToast('Dispatch policy: All ceramics are boxed in 100% recyclable biodegradable wrap.')" class="hover:text-brand-primary">Shipping &amp; Returns</a>
+        <a href="javascript:void(0)" onclick="showToast('Contact us anytime at hello@tuencreations.com')" class="hover:text-brand-primary">Contact Studio</a>
+      </div>
+    </div>
   </footer>
 
-</div>
+  <!-- ============================================================ -->
+  <!-- JAVASCRIPT: DATA & INTERACTION LOGIC                         -->
+  <!-- ============================================================ -->
+  <script>
+    // ------------------------------------------------------------
+    // 1. DATA REPOSITORY (fed from products.json + img/ folder)
+    // ------------------------------------------------------------
+    const IMG_BASE = 'img/';
 
-<script src="products.js"></script>
-<script src="store.js"></script>
-<script>
-(function () {
-  const grid = document.getElementById('grid');
-  const empty = document.getElementById('empty');
-  const meta = document.getElementById('meta');
+    // Elegant placeholder (studio logo) for products whose photos are still being shot
+    const PLACEHOLDER_IMAGE = IMG_BASE + 'logo.png';
 
-  const SORT_LABELS = {
-    "newest": "Newest first",
-    "price-asc": "Price: low → high",
-    "price-desc": "Price: high → low",
-    "name": "Name: A → Z"
-  };
+    const CATEGORY_LABELS = {
+      drinkware: 'Drinkware & Tableware',
+      candles: 'Candles & Home Fragrance',
+      decor: 'Incense & Decor Accents'
+    };
+    const CATEGORY_SUBCATEGORIES = {
+      drinkware: 'Mugs & Cups',
+      candles: 'Jar Candles',
+      decor: 'Sculptural Decor'
+    };
 
-  function selected(list) {
-    return [...document.querySelectorAll(list)];
-  }
+    // Raw data snapshot of products.json
+    const PRODUCTS_DATA = {
+      "products": [
+        {
+          "id": "cute-little-cup",
+          "name": "Cute Little Cup – Footed Smiley Mug & Saucer Set",
+          "category": "drinkware",
+          "material": "Stoneware Ceramic",
+          "capacity_ml": 220,
+          "capacity_note": "220 ml + saucer",
+          "customizable": false,
+          "price_pln": 49,
+          "dimensions": "8 cm height + 14 cm saucer",
+          "care": "Dishwasher & microwave safe",
+          "availability": "Ready to ship in 2–3 days",
+          "images": ["cutelittlecup.jpeg", "cutelittlecup2.jpeg", "cutelittlecup3.jpeg"],
+          "description": "An adorable cream cup sitting happily on its matching saucer, with a hand-painted smiling face, glossy chocolate feet and “CUTE LITTLE CUP” written around the plate rim. Sized for a small cappuccino or cocoa — the photo shows it filled with marshmallow hot chocolate. Each face is painted by hand, so every little cup has its own personality."
+        },
+        {
+          "id": "gingerbread",
+          "name": "Gingerbread Man White Mug",
+          "category": "drinkware",
+          "material": "Stoneware Ceramic (hand-glazed)",
+          "capacity_ml": 350,
+          "capacity_note": "350 ml",
+          "customizable": true,
+          "price_pln": 45,
+          "dimensions": "9.5 cm height × 8 cm diameter",
+          "care": "Dishwasher & microwave safe",
+          "availability": "Made to order · ships in 5–7 days",
+          "images": ["gingerbreadkupa2.jpg", "gingerbreadkupa.jpg", "gingerbreadkupa3.jpg"],
+          "description": "A cream-white stoneware mug with a candy-cane striped handle and a sculpted gingerbread man peeking over the rim. Hand-painted fairy lights with tiny colored dots run around the body, stamped with a cheerful “Merry Xmas Sweet” message. Fully customizable — add your own words under the glaze for a one-of-a-kind holiday gift. The photos show it styled with a marshmallow hot chocolate for cozy winter evenings."
+        },
+        {
+          "id": "today-is-your-day",
+          "name": "“Today is Your Day” Mug",
+          "category": "drinkware",
+          "material": "Stoneware Ceramic",
+          "capacity_ml": 250,
+          "capacity_note": "250 ml",
+          "customizable": true,
+          "price_pln": 32,
+          "dimensions": "9 cm height × 8 cm diameter",
+          "care": "Dishwasher & microwave safe",
+          "availability": "Made to order · ships in 5–7 days",
+          "images": ["kalplikupayazılı.jpg", "kalplikupa.jpg"],
+          "description": "A soft cream mug with a secret hidden inside: “Today is Your Day” is hand-stamped with tiny red hearts at the bottom of the cup, revealed as you finish your drink. The outside is painted with scattered red hearts on a warm cream glaze (see second photo), keeping the theme inside and out. A joyful little morning ritual — or a meaningful motivational gift for someone who needs the reminder."
+        },
+        {
+          "id": "botanical-candle",
+          "name": "Scented Botanical Soy Jar Candle",
+          "category": "candles",
+          "material": "Natural Soy Wax",
+          "capacity_ml": 300,
+          "capacity_note": "300 ml jar",
+          "burn_time_hours": 35,
+          "customizable": false,
+          "price_pln": 42,
+          "dimensions": "9 cm height × 8 cm diameter glass jar",
+          "care": "Trim wick to 5 mm before each use",
+          "availability": "Ready to ship in 2–3 days",
+          "images": [],
+          "description": "A slow-burning soy wax candle poured into a reusable glass jar, decorated with dried botanicals. Choose a scent: vanilla & lavender, fresh linen or warm tonka. Around 35 hours of clean burn time."
+        },
+        {
+          "id": "surprise-candle",
+          "name": "Surprise Message Candle",
+          "category": "candles",
+          "material": "Natural Soy Wax",
+          "capacity_ml": 220,
+          "capacity_note": "220 ml jar",
+          "burn_time_hours": 22,
+          "customizable": true,
+          "price_pln": 39,
+          "dimensions": "8 cm height × 8 cm diameter glass jar",
+          "care": "Trim wick to 5 mm before each use",
+          "availability": "Made to order · ships in 5–7 days",
+          "images": [],
+          "description": "As the candle burns down, a hidden surprise message is revealed inside the jar — your custom words printed on heat-resistant paper. A unique birthday, wedding or thank-you gift in a reusable glass."
+        },
+        {
+          "id": "incense-tray",
+          "name": "Minimalist Incense Tray",
+          "category": "decor",
+          "material": "Terracotta",
+          "size_cm": 12,
+          "customizable": false,
+          "price_pln": 19,
+          "dimensions": "12 cm × 6 cm",
+          "care": "Wipe clean with a damp cloth",
+          "availability": "Ready to ship in 2–3 days",
+          "images": [],
+          "description": "A minimal terracotta tray for stick and cone incense, with a small catchment dish for ash. Its raw, matte surface brings a calm, natural accent to any desk or sideboard."
+        },
+        {
+          "id": "mini-planter",
+          "name": "Mini Ceramic Planter",
+          "category": "decor",
+          "material": "Terracotta",
+          "size_cm": 8,
+          "customizable": false,
+          "price_pln": 22,
+          "dimensions": "8 cm height × 7 cm diameter",
+          "care": "Drainage hole included · wipe clean",
+          "availability": "Ready to ship in 2–3 days",
+          "images": [],
+          "description": "A small hand-thrown terracotta planter for succulents and cacti, with a matching drip dish. Unglazed outside for a natural look, sealed inside for watering."
+        }
+      ]
+    };
 
-  // Nav category links (#cat=...) and catalog search (#q=...) actually drive the filters
-  function applyHash() {
-    const params = new URLSearchParams(location.hash.slice(1));
-    if (params.has('cat')) {
-      const c = params.get('cat');
-      document.querySelectorAll('.f-cat').forEach(x =>
-        x.checked = c !== 'all' && x.value === c);
-    }
-    if (params.has('q')) {
-      document.getElementById('search').value = params.get('q');
-    }
-    render();
-  }
+    // Map raw JSON onto the catalog structure used by the UI
+    const CATALOG_PRODUCTS = PRODUCTS_DATA.products.map(p => {
+      const capacityText = p.capacity_note
+        ? (p.burn_time_hours ? `${p.capacity_note} · ~${p.burn_time_hours} h burn` : p.capacity_note)
+        : (p.size_cm ? `${p.size_cm} cm` : p.dimensions);
 
-  function updateNav(cats) {
-    const single = cats.length === 1 ? cats[0] : (cats.length === 0 ? 'all' : null);
-    document.querySelectorAll('.nav a[data-cat]').forEach(a =>
-      a.classList.toggle('active', a.dataset.cat === single));
-  }
-
-  function render() {
-    // --- read filters ---
-    const cats = selected('.f-cat:checked').map(i => i.value);
-    const pers = document.querySelector('input[name="pers"]:checked').value;
-    const q = document.getElementById('search').value.trim().toLowerCase();
-    const max = parseFloat(document.getElementById('price-max').value) || 110;
-    const sort = document.getElementById('sort').value;
-
-    // --- contextual facets follow the selected categories ---
-    const capVals = selected('.f-cap:checked').map(i => i.value);
-    const burnVals = selected('.f-burn:checked').map(i => i.value);
-    const jarVals = selected('.f-jar:checked').map(i => i.value);
-    const sizeVals = selected('.f-dsize:checked').map(i => i.value);
-    const hasDW = cats.length === 0 || cats.includes('drinkware');
-    const hasCND = cats.length === 0 || cats.includes('candles');
-    const hasDEC = cats.length === 0 || cats.includes('decor');
-    document.getElementById('facet-drinkware').hidden = !hasDW;
-    document.getElementById('facet-candles').hidden = !hasCND;
-    document.getElementById('facet-decor').hidden = !hasDEC;
-
-    // --- filter ---
-    let list = PRODUCTS.filter(p => {
-      if (cats.length && !cats.includes(p.cat)) return false;
-      // drinkware: capacity in ml (facets belong to this category only)
-      if (capVals.length && p.cat === 'drinkware') {
-        if (p.capacity < 200 && !capVals.includes('under')) return false;
-        if (p.capacity >= 200 && p.capacity <= 350 && !capVals.includes('standard')) return false;
-        if (p.capacity > 350 && !capVals.includes('over')) return false;
-      }
-      // candles: burn time
-      if (burnVals.length && p.cat === 'candles') {
-        const long = (p.burnTime || 0) >= 25;
-        if (long && !burnVals.includes('long')) return false;
-        if (!long && !burnVals.includes('short')) return false;
-      }
-      // candles: jar volume
-      if (jarVals.length && p.cat === 'candles') {
-        if (p.capacity < 250 && !jarVals.includes('small')) return false;
-        if (p.capacity >= 250 && !jarVals.includes('medium')) return false;
-      }
-      // decor: physical size (cm from the item's largest dimension)
-      if (sizeVals.length && p.cat === 'decor') {
-        const small = (p.sizeCm || 0) <= 10;
-        if (small && !sizeVals.includes('small')) return false;
-        if (!small && !sizeVals.includes('medium')) return false;
-      }
-      if (pers === 'custom' && !p.customizable) return false;
-      if (pers === 'standard' && p.customizable) return false;
-      if (p.price < 15 || p.price > max) return false;
-      if (q && !(p.name + ' ' + p.material).toLowerCase().includes(q)) return false;
-      return true;
+      return {
+        id: p.id,
+        title: p.name,
+        category: CATEGORY_LABELS[p.category],
+        subCategory: CATEGORY_SUBCATEGORIES[p.category],
+        material: p.material,
+        capacityVal: (p.capacity_ml !== null && p.capacity_ml !== undefined) ? p.capacity_ml : (p.size_cm || 0),
+        capacityText: capacityText,
+        burnTimeHours: p.burn_time_hours || null,
+        customizable: p.customizable,
+        price: p.price_pln,
+        dimensions: p.dimensions,
+        care: p.care,
+        availability: p.availability,
+        images: (p.images || []).map(f => IMG_BASE + encodeURI(f)),
+        description: p.description
+      };
     });
 
-    // --- sort ---
-    list = list.slice().sort((a, b) => {
-      switch (sort) {
-        case 'price-asc':  return a.price - b.price;
-        case 'price-desc': return b.price - a.price;
-        case 'name':       return a.name.localeCompare(b.name);
-        default:           return a.days - b.days;      // newest first
+    // Graceful image fallback for products without photos yet
+    function getProductImages(prod) {
+      return prod.images.length ? prod.images : [PLACEHOLDER_IMAGE];
+    }
+
+    // State
+    let currentCategory = 'All Products';
+    let currentProduct = CATALOG_PRODUCTS[1]; // default to gingerbread mug
+    let savedItems = new Set();
+    let cartItemsCount = 0;
+
+    // Price bounds
+    const MIN_PRICE_LIMIT = 15;
+    const MAX_PRICE_LIMIT = 50;
+    let currentMinPrice = 15;
+    let currentMaxPrice = 50;
+
+    // ------------------------------------------------------------
+    // 2. INITIALIZATION
+    // ------------------------------------------------------------
+    window.onload = function() {
+      initDualPriceSlider();
+      renderProducts(CATALOG_PRODUCTS);
+      updateContextualFacetVisibility();
+      updateSliderVisuals();
+    };
+
+    // ------------------------------------------------------------
+    // CUSTOM POINTER-DRIVEN DUAL RANGE SLIDER
+    // ------------------------------------------------------------
+    function initDualPriceSlider() {
+      const root = document.getElementById('dual-slider-root');
+      const handleMin = document.getElementById('handle-min');
+      const handleMax = document.getElementById('handle-max');
+      let activeDrag = null;
+
+      function getFractionFromPointer(e) {
+        const rect = root.getBoundingClientRect();
+        const clientX = e.clientX ?? (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+        let fraction = (clientX - rect.left) / rect.width;
+        if (fraction < 0) fraction = 0;
+        if (fraction > 1) fraction = 1;
+        return fraction;
       }
-    });
 
-    // --- draw ---
-    grid.innerHTML = list.map(p => {
-      const img = p.image
-        ? `<img src="${p.image}" alt="${p.name} – product photo">`
-        : `<span class="img-ph">${p.name}</span>`;
-      const spec = p.cat === 'candles'
-        ? (p.capNote + ' · ~' + p.burnTime + ' h')
-        : (p.cat === 'decor' ? p.sizeCm + ' cm' : p.capNote);
-      const faved = window.Store && Store.isFav(p.id);
-      return `
-      <article class="card">
-        <a class="card-link" href="detail.html?id=${p.id}">
-          <div class="img">
-            <span class="badge-float">${p.customizable ? 'Customizable' : 'Ready-to-Ship'}</span>
-            ${img}
-          </div>
-          <div class="card-body">
-            <p class="card-cat">${CAT_LABELS[p.cat]}</p>
-            <h3 class="card-title">${p.name}</h3>
-            <p class="card-meta"><strong>Material:</strong> ${p.material}</p>
-            <p class="card-meta"><strong>Size / Spec:</strong> ${spec}</p>
-            <p class="price">${p.price} PLN</p>
-          </div>
-        </a>
-        <div class="card-actions">
-          <button type="button" class="fav-btn ${faved ? 'is-fav' : ''}" data-fav="${p.id}"
-                  aria-pressed="${faved}" aria-label="${faved ? 'Remove from' : 'Add to'} favorites">
-            ${faved ? '♥' : '♡'}
-          </button>
-          <button type="button" class="add-btn" data-add="${p.id}" aria-label="Add to cart">Add to Cart</button>
-          <a class="view-details" href="detail.html?id=${p.id}">View Details ›</a>
-        </div>
-      </article>`;
-    }).join('');
+      function onPointerMove(e) {
+        if (!activeDrag) return;
+        const fraction = getFractionFromPointer(e);
+        const calculatedPrice = Math.round(MIN_PRICE_LIMIT + fraction * (MAX_PRICE_LIMIT - MIN_PRICE_LIMIT));
 
-    // --- active filter chips ---
-    const CAP_LABELS = { under: '< 200 ml', standard: '200–350 ml', over: '> 350 ml' };
-    const BURN_LABELS = { short: '< 25 h burn', long: '25 h+ burn' };
-    const JAR_LABELS = { small: 'jar ≤ 250 ml', medium: 'jar 250–350 ml' };
-    const SIZE_LABELS = { small: 'size ≤ 10 cm', medium: 'size > 10 cm' };
-    const chips = [];
-    cats.forEach(c => chips.push({ t: 'cat', v: c, l: CAT_LABELS[c] }));
-    capVals.forEach(c => chips.push({ t: 'cap', v: c, l: 'Mugs: ' + CAP_LABELS[c] }));
-    burnVals.forEach(c => chips.push({ t: 'burn', v: c, l: 'Candles: ' + BURN_LABELS[c] }));
-    jarVals.forEach(c => chips.push({ t: 'jar', v: c, l: 'Candles: ' + JAR_LABELS[c] }));
-    sizeVals.forEach(c => chips.push({ t: 'size', v: c, l: 'Decor: ' + SIZE_LABELS[c] }));
-    if (pers === 'custom') chips.push({ t: 'pers', l: 'Customizable only' });
-    if (pers === 'standard') chips.push({ t: 'pers', l: 'Ready-to-Ship only' });
-    if (max < 110) chips.push({ t: 'price', l: 'Up to ' + max + ' PLN' });
-    if (q) chips.push({ t: 'search', l: '“' + q + '”' });
-    const chipsEl = document.getElementById('chips');
-    chipsEl.innerHTML = chips.length
-      ? chips.map(c =>
-          `<span class="chip">${c.l}<button type="button" class="chip-x" data-type="${c.t}" data-val="${c.v || ''}" aria-label="Remove filter ${c.l}">✕</button></span>`
-        ).join('') + '<button type="button" class="chip chip-clear" data-type="all">Clear all filters</button>'
-      : '';
+        if (activeDrag === 'min') {
+          currentMinPrice = Math.min(Math.max(MIN_PRICE_LIMIT, calculatedPrice), currentMaxPrice);
+        } else if (activeDrag === 'max') {
+          currentMaxPrice = Math.max(Math.min(MAX_PRICE_LIMIT, calculatedPrice), currentMinPrice);
+        }
 
-    empty.hidden = list.length !== 0;
-    meta.textContent = list.length + ' product' + (list.length === 1 ? '' : 's') +
-                       ' found · sorted by ' + SORT_LABELS[sort];
-    updateNav(cats);
-  }
+        updateSliderVisuals();
+        applyFilters();
+      }
 
-  document.getElementById('apply').addEventListener('click', render);
-  document.getElementById('clear').addEventListener('click', () => {
-    document.querySelectorAll('.f-cat, .f-cap, .f-burn, .f-jar, .f-dsize, input[name="pers"][value="all"], #search')
-      .forEach(el => {
-        if (el.type === 'checkbox') el.checked = false;
-        else if (el.type === 'radio') el.checked = true;
-        else el.value = '';
+      function onPointerUp() {
+        if (activeDrag) {
+          handleMin.classList.remove('dragging');
+          handleMax.classList.remove('dragging');
+          activeDrag = null;
+          window.removeEventListener('pointermove', onPointerMove);
+          window.removeEventListener('pointerup', onPointerUp);
+        }
+      }
+
+      handleMin.addEventListener('pointerdown', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        activeDrag = 'min';
+        handleMin.classList.add('dragging');
+        handleMin.style.zIndex = '5';
+        handleMax.style.zIndex = '3';
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
       });
-    resetPrice();
-    render();
-  });
-  document.querySelectorAll('.filters input, #sort').forEach(el =>
-    el.addEventListener('change', render));
-  document.getElementById('search').addEventListener('input', render);
 
-  function resetPrice() {
-    const s = document.getElementById('price-max');
-    s.value = 110;
-    document.getElementById('price-live').textContent = '110 PLN';
-  }
-  document.getElementById('price-max').addEventListener('input', e =>
-    document.getElementById('price-live').textContent = e.target.value + ' PLN');
+      handleMax.addEventListener('pointerdown', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        activeDrag = 'max';
+        handleMax.classList.add('dragging');
+        handleMax.style.zIndex = '5';
+        handleMin.style.zIndex = '3';
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+      });
 
-  // Active filter chips: ✕ removes that single filter
-  document.getElementById('chips').addEventListener('click', e => {
-    const b = e.target.closest('button');
-    if (!b) return;
-    const type = b.dataset.type;
-    if (type === 'all') {
-      document.getElementById('clear').click();
-      return;
+      // Clicking directly on the bar track snaps the closest handle
+      root.addEventListener('pointerdown', function(e) {
+        if (e.target === handleMin || e.target === handleMax) return;
+        const fraction = getFractionFromPointer(e);
+        const clickedPrice = Math.round(MIN_PRICE_LIMIT + fraction * (MAX_PRICE_LIMIT - MIN_PRICE_LIMIT));
+        const distToMin = Math.abs(clickedPrice - currentMinPrice);
+        const distToMax = Math.abs(clickedPrice - currentMaxPrice);
+
+        if (distToMin <= distToMax) {
+          activeDrag = 'min';
+          currentMinPrice = Math.min(clickedPrice, currentMaxPrice);
+          handleMin.classList.add('dragging');
+          handleMin.style.zIndex = '5';
+          handleMax.style.zIndex = '3';
+        } else {
+          activeDrag = 'max';
+          currentMaxPrice = Math.max(clickedPrice, currentMinPrice);
+          handleMax.classList.add('dragging');
+          handleMax.style.zIndex = '5';
+          handleMin.style.zIndex = '3';
+        }
+
+        updateSliderVisuals();
+        applyFilters();
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+      });
     }
-    if (type === 'cat') {
-      const cb = document.querySelector('.f-cat[value="' + b.dataset.val + '"]');
-      if (cb) cb.checked = false;
-    } else if (type === 'cap') {
-      const cb = document.querySelector('.f-cap[value="' + b.dataset.val + '"]');
-      if (cb) cb.checked = false;
-    } else if (type === 'burn') {
-      const cb = document.querySelector('.f-burn[value="' + b.dataset.val + '"]');
-      if (cb) cb.checked = false;
-    } else if (type === 'jar') {
-      const cb = document.querySelector('.f-jar[value="' + b.dataset.val + '"]');
-      if (cb) cb.checked = false;
-    } else if (type === 'size') {
-      const cb = document.querySelector('.f-dsize[value="' + b.dataset.val + '"]');
-      if (cb) cb.checked = false;
-    } else if (type === 'pers') {
-      document.querySelector('input[name="pers"][value="all"]').checked = true;
-    } else if (type === 'price') {
-      document.getElementById('price-max').value = 110;
-      document.getElementById('price-live').textContent = '110 PLN';
-    } else if (type === 'search') {
-      document.getElementById('search').value = '';
+
+    function updateSliderVisuals() {
+      const handleMin = document.getElementById('handle-min');
+      const handleMax = document.getElementById('handle-max');
+      const highlight = document.getElementById('slider-highlight');
+      const priceVal = document.getElementById('price-val');
+      const inputMin = document.getElementById('input-min-price');
+      const inputMax = document.getElementById('input-max-price');
+
+      const minPercent = ((currentMinPrice - MIN_PRICE_LIMIT) / (MAX_PRICE_LIMIT - MIN_PRICE_LIMIT)) * 100;
+      const maxPercent = ((currentMaxPrice - MIN_PRICE_LIMIT) / (MAX_PRICE_LIMIT - MIN_PRICE_LIMIT)) * 100;
+
+      if (handleMin) handleMin.style.left = `${minPercent}%`;
+      if (handleMax) handleMax.style.left = `${maxPercent}%`;
+      if (highlight) {
+        highlight.style.left = `${minPercent}%`;
+        highlight.style.width = `${maxPercent - minPercent}%`;
+      }
+
+      if (inputMin && document.activeElement !== inputMin) {
+        inputMin.value = currentMinPrice;
+      }
+      if (inputMax && document.activeElement !== inputMax) {
+        inputMax.value = currentMaxPrice;
+      }
+
+      if (priceVal) {
+        priceVal.textContent = `${currentMinPrice} – ${currentMaxPrice} PLN`;
+      }
     }
-    render();
-  });
 
-  // Card action buttons (favorite / add to cart) – event delegation
-  grid.addEventListener('click', e => {
-    const fav = e.target.closest('button[data-fav]');
-    const add = e.target.closest('button[data-add]');
-    if (fav) {
-      const on = Store.toggleFav(fav.dataset.fav);
-      fav.classList.toggle('is-fav', on);
-      fav.setAttribute('aria-pressed', on);
-      fav.textContent = on ? '♥' : '♡';
-      StoreUI.refreshBadges();
-    } else if (add) {
-      Store.addCart(add.dataset.add);
-      StoreUI.refreshBadges();
-      add.textContent = '✓';
-      setTimeout(() => { add.textContent = '🛒'; }, 1200);
+    function onMinNumericChange(val) {
+      let num = parseInt(val, 10);
+      if (isNaN(num)) return;
+      if (num < MIN_PRICE_LIMIT) num = MIN_PRICE_LIMIT;
+      if (num > currentMaxPrice) num = currentMaxPrice;
+      currentMinPrice = num;
+      updateSliderVisuals();
+      applyFilters();
     }
-  });
-  document.addEventListener('store:change', render);
 
-  window.addEventListener('hashchange', applyHash);
-  applyHash();
-})();
-</script>
+    function onMaxNumericChange(val) {
+      let num = parseInt(val, 10);
+      if (isNaN(num)) return;
+      if (num > MAX_PRICE_LIMIT) num = MAX_PRICE_LIMIT;
+      if (num < currentMinPrice) num = currentMinPrice;
+      currentMaxPrice = num;
+      updateSliderVisuals();
+      applyFilters();
+    }
 
+    // ------------------------------------------------------------
+    // 3. NAVIGATION & VIEW SWITCHING
+    // ------------------------------------------------------------
+    function setTopCategory(catName) {
+      currentCategory = catName;
+
+      // Update Nav Buttons
+      document.querySelectorAll('.cat-nav-btn').forEach(btn => {
+        if (btn.dataset.cat === catName) {
+          btn.classList.add('text-amber-200', 'border-amber-300', 'font-semibold');
+          btn.classList.remove('text-rose-100/80', 'border-transparent');
+        } else {
+          btn.classList.remove('text-amber-200', 'border-amber-300', 'font-semibold');
+          btn.classList.add('text-rose-100/80', 'border-transparent');
+        }
+      });
+
+      // Synchronize sidebar checkboxes
+      const checkboxes = document.querySelectorAll('input[name="category"]');
+      checkboxes.forEach(cb => {
+        cb.checked = (catName !== 'All Products' && cb.value === catName);
+      });
+
+      updateContextualFacetVisibility();
+      applyFilters();
+      navigateToCatalog();
+    }
+
+    function navigateToCatalog(optionalCategory) {
+      if (optionalCategory) {
+        setTopCategory(optionalCategory);
+      }
+      document.getElementById('view-detail').classList.add('hidden');
+      document.getElementById('view-listing').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openProductDetail(productId) {
+      const prod = CATALOG_PRODUCTS.find(p => p.id === productId);
+      if (!prod) return;
+      currentProduct = prod;
+
+      // Populate Detail View
+      document.getElementById('detail-bc-cat').textContent = prod.category;
+      document.getElementById('detail-bc-title').textContent = prod.title;
+      document.getElementById('detail-breadcrumbs-path').textContent = `${prod.category} > ${prod.subCategory}`;
+      document.getElementById('detail-title').textContent = prod.title;
+      document.getElementById('detail-price').textContent = `${prod.price} PLN`;
+      document.getElementById('detail-desc').textContent = prod.description;
+
+      // Table Attributes
+      document.getElementById('attr-category').textContent = prod.category;
+      document.getElementById('attr-material').textContent = prod.material;
+      document.getElementById('attr-capacity').textContent = prod.capacityText;
+      document.getElementById('attr-custom').textContent = prod.customizable ? 'Yes – personalized text available' : 'No – standard ready-to-ship design';
+      document.getElementById('attr-dims').textContent = prod.dimensions;
+      document.getElementById('attr-care').textContent = prod.care;
+      document.getElementById('attr-avail').textContent = prod.availability;
+
+      // Custom Input Box Visibility
+      const customBox = document.getElementById('custom-input-box');
+      if (prod.customizable) {
+        customBox.classList.remove('hidden');
+      } else {
+        customBox.classList.add('hidden');
+      }
+
+      // Images
+      const productImgs = getProductImages(prod);
+      const mainImg = document.getElementById('detail-main-img');
+      mainImg.src = productImgs[0];
+      mainImg.alt = prod.title;
+
+      const badgeCorner = document.getElementById('detail-badge-corner');
+      badgeCorner.textContent = prod.customizable ? 'Customizable' : 'Ready-to-Ship';
+
+      // Thumbnails
+      const thumbsContainer = document.getElementById('detail-thumbs-container');
+      thumbsContainer.innerHTML = '';
+      productImgs.forEach((imgUrl, idx) => {
+        const thumbBtn = document.createElement('button');
+        thumbBtn.className = `aspect-square rounded-xl overflow-hidden border-2 transition ${idx === 0 ? 'border-brand-primary ring-2 ring-brand-primary/30' : 'border-stone-200 hover:border-brand-primary'}`;
+        thumbBtn.innerHTML = `<img src="${imgUrl}" alt="thumbnail ${idx+1}" class="w-full h-full object-cover bg-stone-50">`;
+        thumbBtn.onclick = function() {
+          mainImg.src = imgUrl;
+          thumbsContainer.querySelectorAll('button').forEach(b => b.classList.remove('border-brand-primary', 'ring-2', 'ring-brand-primary/30'));
+          thumbBtn.classList.add('border-brand-primary', 'ring-2', 'ring-brand-primary/30');
+        };
+        thumbsContainer.appendChild(thumbBtn);
+      });
+
+      // Update Save button label
+      const saveBtn = document.getElementById('detail-save-btn');
+      if (savedItems.has(prod.id)) {
+        saveBtn.innerHTML = `<svg class="w-4 h-4 text-rose-600 fill-current" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4.5 4.5 0 116.364 6.364L10 19.364l-7.682-7.682a4.5 4.5 0 010-6.364z" clip-rule="evenodd"/></svg><span class="text-brand-primary font-semibold">Saved in Wishlist</span>`;
+      } else {
+        saveBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg><span>Save to Wishlist</span>`;
+      }
+
+      // Switch View
+      document.getElementById('view-listing').classList.add('hidden');
+      document.getElementById('view-detail').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ------------------------------------------------------------
+    // 4. CONTEXTUAL FACET VISIBILITY & FILTERING
+    // ------------------------------------------------------------
+    function updateContextualFacetVisibility() {
+      const selectedCats = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
+      const isAll = (selectedCats.length === 0);
+
+      const facetDrink = document.getElementById('facet-drinkware');
+      const facetCandle = document.getElementById('facet-candles');
+      const facetDecor = document.getElementById('facet-decor');
+
+      if (isAll) {
+        facetDrink.style.display = 'block';
+        facetCandle.style.display = 'block';
+        facetDecor.style.display = 'block';
+      } else {
+        facetDrink.style.display = selectedCats.includes('Drinkware & Tableware') ? 'block' : 'none';
+        facetCandle.style.display = selectedCats.includes('Candles & Home Fragrance') ? 'block' : 'none';
+        facetDecor.style.display = selectedCats.includes('Incense & Decor Accents') ? 'block' : 'none';
+      }
+    }
+
+    function handleSearch() {
+      // If user types while viewing the detail page, seamlessly return to the listing view
+      const detailView = document.getElementById('view-detail');
+      if (!detailView.classList.contains('hidden')) {
+        navigateToCatalog();
+      }
+      applyFilters();
+    }
+
+    function updatePrice(val) {
+      document.getElementById('price-val').textContent = `${val} PLN`;
+    }
+
+    function applyFilters() {
+      updateContextualFacetVisibility();
+
+      const searchVal = document.getElementById('search-input').value.toLowerCase().trim();
+      const customVal = document.querySelector('input[name="customization"]:checked').value;
+      const selectedCats = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
+      
+      const selectedCapMugs = Array.from(document.querySelectorAll('input[name="capacity"]:checked')).map(cb => cb.value);
+      const selectedCandles = Array.from(document.querySelectorAll('input[name="candle-cap"]:checked')).map(cb => cb.value);
+      const selectedDecor = Array.from(document.querySelectorAll('input[name="decor-size"]:checked')).map(cb => cb.value);
+
+      const sortVal = document.getElementById('sort-select').value;
+
+      let filtered = CATALOG_PRODUCTS.filter(item => {
+        // Search Term
+        if (searchVal) {
+          const matchStr = `${item.title} ${item.description} ${item.material} ${item.category}`.toLowerCase();
+          if (!matchStr.includes(searchVal)) return false;
+        }
+
+        // Category Filter
+        if (selectedCats.length > 0 && !selectedCats.includes(item.category)) {
+          return false;
+        }
+
+        // Accurate Price Bounds Filter (currentMinPrice to currentMaxPrice)
+        if (item.price < currentMinPrice || item.price > currentMaxPrice) {
+          return false;
+        }
+
+        // Customization
+        if (customVal === 'customizable' && !item.customizable) return false;
+        if (customVal === 'ready' && item.customizable) return false;
+
+        // Contextual Mug Capacity Filter
+        // If any mug capacity facet is checked, only matching mugs qualify.
+        if (selectedCapMugs.length > 0) {
+          if (item.category !== 'Drinkware & Tableware') return false;
+          const matchSmall = selectedCapMugs.includes('small') && item.capacityVal < 200;
+          const matchMedium = selectedCapMugs.includes('medium') && (item.capacityVal >= 200 && item.capacityVal <= 350);
+          const matchLarge = selectedCapMugs.includes('large') && item.capacityVal > 350;
+          if (!matchSmall && !matchMedium && !matchLarge) return false;
+        }
+
+        // Contextual Candle Volume Filter
+        // If any candle facet is checked, only matching candles qualify.
+        if (selectedCandles.length > 0) {
+          if (item.category !== 'Candles & Home Fragrance') return false;
+          const matchPetite = selectedCandles.includes('petite') && item.capacityVal <= 250;
+          const matchClassic = selectedCandles.includes('classic') && item.capacityVal > 250;
+          if (!matchPetite && !matchClassic) return false;
+        }
+
+        // Contextual Decor Size Filter
+        // If any decor size facet is checked, only matching decor accents qualify.
+        if (selectedDecor.length > 0) {
+          if (item.category !== 'Incense & Decor Accents') return false;
+          const matchCompact = selectedDecor.includes('compact') && item.capacityVal <= 10;
+          const matchStandard = selectedDecor.includes('standard') && item.capacityVal > 10;
+          if (!matchCompact && !matchStandard) return false;
+        }
+
+        return true;
+      });
+
+      // Sorting
+      if (sortVal === 'price-asc') {
+        filtered.sort((a, b) => a.price - b.price);
+      } else if (sortVal === 'price-desc') {
+        filtered.sort((a, b) => b.price - a.price);
+      }
+
+      renderProducts(filtered);
+      renderActivePills(selectedCats, selectedCapMugs, selectedCandles, selectedDecor, customVal, currentMinPrice, currentMaxPrice, searchVal);
+    }
+
+    function renderProducts(products) {
+      const grid = document.getElementById('product-grid');
+      const emptyState = document.getElementById('empty-state');
+      const countLabel = document.getElementById('results-count');
+
+      grid.innerHTML = '';
+      countLabel.textContent = `${products.length} product${products.length === 1 ? '' : 's'}`;
+
+      if (products.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      emptyState.classList.add('hidden');
+
+      products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-2xl border border-brand-border overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between group";
+
+        const isSaved = savedItems.has(p.id);
+
+        card.innerHTML = `
+          <div>
+            <!-- Image Area (ideal ratio: 1:1 square) -->
+            <div class="relative aspect-square bg-stone-50 border-b border-stone-100 overflow-hidden cursor-pointer" onclick="openProductDetail('${p.id}')">
+              <img src="${getProductImages(p)[0]}" alt="${p.title}" loading="lazy" class="w-full h-full object-cover">
+              <span class="absolute top-2.5 right-2.5 bg-white/95 text-[11px] font-semibold text-brand-primary px-2.5 py-0.5 rounded-full shadow-sm">
+                ${p.customizable ? 'Customizable' : 'Ready-to-Ship'}
+              </span>
+            </div>
+              <span class="absolute top-2.5 right-2.5 bg-white/95 text-[11px] font-semibold text-brand-primary px-2.5 py-0.5 rounded-full shadow-sm">
+                ${p.customizable ? 'Customizable' : 'Ready-to-Ship'}
+              </span>
+            </div>
+
+            <!-- Card Content -->
+            <div class="p-4">
+              <div class="text-[11px] font-medium text-stone-400 mb-1">${p.category}</div>
+              <h4 onclick="openProductDetail('${p.id}')" class="font-bold text-sm text-stone-900 group-hover:text-brand-primary transition cursor-pointer mb-2 line-clamp-2">
+                ${p.title}
+              </h4>
+              
+              <!-- Key Attributes on Listing -->
+              <div class="text-xs text-stone-500 space-y-1 mb-3">
+                <p><span class="font-medium text-stone-700">Material:</span> ${p.material}</p>
+                <p><span class="font-medium text-stone-700">Size / Spec:</span> ${p.capacityText}</p>
+              </div>
+
+              <div class="text-base font-bold text-brand-primary">
+                ${p.price} PLN
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Actions (Slide requirement: straightforward detail opening) -->
+          <div class="px-4 pb-4 pt-1 border-t border-stone-100 flex items-center justify-between gap-2">
+            <button onclick="toggleSave('${p.id}', this)" class="p-2 rounded-lg hover:bg-stone-100 text-stone-400 hover:text-brand-primary transition">
+              <svg class="w-4 h-4 ${isSaved ? 'text-rose-600 fill-current' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+            </button>
+            <button onclick="quickAddToCart('${p.id}')" class="flex-1 bg-stone-100 hover:bg-brand-primary hover:text-white text-stone-700 py-1.5 rounded-lg text-xs font-medium transition">
+              Add to Cart
+            </button>
+            <button onclick="openProductDetail('${p.id}')" class="text-xs font-semibold text-brand-primary hover:underline flex items-center gap-0.5">
+              <span>View Details</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function renderActivePills(cats, caps, candleCaps, decorSizes, custom, minPrice, maxPrice, search) {
+      const container = document.getElementById('filter-pills');
+      container.innerHTML = '';
+
+      if (search) {
+        addPill(`Search: "${search}"`, () => {
+          document.getElementById('search-input').value = '';
+          applyFilters();
+        });
+      }
+
+      cats.forEach(c => {
+        addPill(`Category: ${c}`, () => {
+          document.querySelector(`input[name="category"][value="${c}"]`).checked = false;
+          applyFilters();
+        });
+      });
+
+      caps.forEach(cap => {
+        addPill(`Mug Capacity: ${cap}`, () => {
+          document.querySelector(`input[name="capacity"][value="${cap}"]`).checked = false;
+          applyFilters();
+        });
+      });
+
+      candleCaps.forEach(cap => {
+        addPill(`Candle Volume: ${cap}`, () => {
+          document.querySelector(`input[name="candle-cap"][value="${cap}"]`).checked = false;
+          applyFilters();
+        });
+      });
+
+      decorSizes.forEach(size => {
+        addPill(`Decor Size: ${size}`, () => {
+          document.querySelector(`input[name="decor-size"][value="${size}"]`).checked = false;
+          applyFilters();
+        });
+      });
+
+      if (custom !== 'all') {
+        addPill(custom === 'customizable' ? 'Customizable' : 'Ready-to-Ship', () => {
+          document.querySelector('input[name="customization"][value="all"]').checked = true;
+          applyFilters();
+        });
+      }
+
+      if (minPrice > MIN_PRICE_LIMIT || maxPrice < MAX_PRICE_LIMIT) {
+        addPill(`${minPrice} – ${maxPrice} PLN`, () => {
+          currentMinPrice = MIN_PRICE_LIMIT;
+          currentMaxPrice = MAX_PRICE_LIMIT;
+          updateSliderVisuals();
+          applyFilters();
+        });
+      }
+    }
+
+    function addPill(text, onRemove) {
+      const container = document.getElementById('filter-pills');
+      const pill = document.createElement('span');
+      pill.className = "inline-flex items-center gap-1 bg-rose-100/70 text-brand-primary text-xs font-medium px-2.5 py-0.5 rounded-full";
+      pill.innerHTML = `
+        <span>${text}</span>
+        <button class="hover:text-rose-900 ml-0.5">&times;</button>
+      `;
+      pill.querySelector('button').onclick = onRemove;
+      container.appendChild(pill);
+    }
+
+    function resetAllFilters() {
+      document.getElementById('search-input').value = '';
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+      document.querySelector('input[name="customization"][value="all"]').checked = true;
+      currentMinPrice = MIN_PRICE_LIMIT;
+      currentMaxPrice = MAX_PRICE_LIMIT;
+      updateSliderVisuals();
+      document.getElementById('sort-select').value = 'newest';
+      setTopCategory('All Products');
+    }
+
+    // ------------------------------------------------------------
+    // 5. COMMERCE & WISHLIST ACTIONS
+    // ------------------------------------------------------------
+    function toggleSave(id, btn) {
+      if (savedItems.has(id)) {
+        savedItems.delete(id);
+        showToast('Item removed from Wishlist');
+      } else {
+        savedItems.add(id);
+        showToast('Item saved to your Wishlist!');
+      }
+      document.getElementById('saved-count').textContent = savedItems.size;
+      applyFilters();
+    }
+
+    function toggleSaveCurrent() {
+      if (!currentProduct) return;
+      toggleSave(currentProduct.id);
+      openProductDetail(currentProduct.id);
+    }
+
+    function quickAddToCart(id) {
+      const prod = CATALOG_PRODUCTS.find(p => p.id === id);
+      const label = prod ? prod.title : 'Item';
+      cartItemsCount++;
+      document.getElementById('cart-count').textContent = cartItemsCount;
+      showToast(`Added "${label}" to cart!`);
+    }
+
+    function handleAddToCart() {
+      const customInput = document.getElementById('custom-text-input');
+      const inscription = customInput ? customInput.value.trim() : '';
+
+      cartItemsCount++;
+      document.getElementById('cart-count').textContent = cartItemsCount;
+
+      if (currentProduct.customizable && inscription) {
+        showToast(`Added to cart with custom text: "${inscription}"!`);
+      } else {
+        showToast(`Added "${currentProduct.title}" to cart!`);
+      }
+    }
+
+    function handleOrderNow() {
+      handleAddToCart();
+      setTimeout(() => {
+        showToast('Proceeding to studio checkout & delivery address...');
+      }, 800);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toast-message');
+      msg.textContent = message;
+      toast.classList.remove('opacity-0', 'translate-y-20');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-20');
+      }, 2500);
+    }
+  </script>
 </body>
 </html>
